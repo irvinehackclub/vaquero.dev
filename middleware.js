@@ -1,5 +1,7 @@
 // middleware to detect subdomain and log it to the console
 
+import { NextResponse } from "next/server";
+
 const test = null;
 
 function resolveHost (request) {
@@ -33,16 +35,25 @@ function resolveHost (request) {
     return { scope: 'error' }
 }
 
+function getProjectFile (path, project, user) {
+    return ['<p>hi</p>', {
+        status: 200,
+        headers: {
+            'Content-Type': 'text/html'
+        }
+    }];
+}
+
 export default function middleware (request) {
     const host = resolveHost(request);
 
-    fetch('https://ntfy.sh/vaquero_dev', {
-        method: 'POST', // PUT works too
-        body: JSON.stringify(host)
-    })
+    if (host.scope == 'project' || host.scope == 'user') {
+        const [path] = request.url.split('?');
 
+        const [body, response] = getProjectFile(path, host.project, host.user);
 
-
+        return new NextResponse(body, response);
+    }
 } // middleware to detect subdomain and log it to the console
 
 export const config = {
