@@ -45,9 +45,13 @@ function getProjectFile (path, project, user) {
 }
 
 export default function middleware (request) {
-    const host = resolveHost(request);
+    const { scope, ...host } = resolveHost(request);
 
-    if (host.scope == 'project' || host.scope == 'user') {
+    if (scope == 'internal' && site == 'api') {
+        return NextResponse.rewrite('/api' + request.url);
+    }
+
+    if (scope == 'project' || scope == 'user') {
         const [path] = request.url.split('?');
 
         const [body, response] = getProjectFile(path, host.project, host.user);

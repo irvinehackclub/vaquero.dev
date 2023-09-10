@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@prisma/client": "^5.2.0",
+    "code-exec": "^1.0.0",
     "codemirror": "^6.0.1",
     "install": "^0.13.0",
     "next": "13.4.19",
