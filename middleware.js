@@ -10,7 +10,7 @@ function resolveHost (request) {
 
     if (host.startsWith('[::1]')) return { scope: 'internal', site: 'root' }
 
-    if (!host.endsWith('.vaquero.dev')) {
+    if (host.endsWith('.vaquero.dev')) {
         if (computeFragments.length == 1) {
             const [subdomain] = computeFragments;
 
