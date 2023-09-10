@@ -47,7 +47,7 @@ function getProjectFile (path, project, user) {
 export default function middleware (request) {
     const { scope, ...host } = resolveHost(request);
 
-    if (scope == 'internal' && site == 'api') {
+    if (scope == 'internal' && host.site == 'api') {
         return NextResponse.rewrite('/api' + request.url);
     }
 
