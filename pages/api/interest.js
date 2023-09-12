@@ -6,7 +6,6 @@ export default async function handler(req, res) {
     await prisma.interest.create({
         data: {
             name: req.body.name,
-            grade: req.body.grade,
             phoneNumber: req.body.phoneNumber,
             email: req.body.email,
             interestInMeeting: req.body.interestInMeeting
