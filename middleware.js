@@ -48,7 +48,6 @@ export default function middleware (request) {
     const { scope, ...host } = resolveHost(request);
 
     if (scope == 'internal' && host.site == 'api') {
-        console.log(request.nextUrl.pathname);
         return NextResponse.rewrite(
             new URL('/api' + request.nextUrl.pathname, request.url)
         );
