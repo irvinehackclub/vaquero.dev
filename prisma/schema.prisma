@@ -17,3 +17,12 @@ model User {
   email      String   @unique
   createdAt  DateTime @default(now())
 }
+
+model Interest {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  grade       Int
+  skillLevel  String
+  phoneNumber String
+  createdAt   DateTime @default(now())
+}
