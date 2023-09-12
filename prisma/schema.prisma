@@ -20,9 +20,10 @@ model User {
 
 model Interest {
   id          Int      @id @default(autoincrement())
-  name        String   @unique
+  name        String
   grade       Int
   skillLevel  String
-  phoneNumber String
+  email       String?
+  phoneNumber String?
   createdAt   DateTime @default(now())
 }
