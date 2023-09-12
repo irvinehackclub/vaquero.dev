@@ -7,8 +7,9 @@ export default async function handler(req, res) {
         data: {
             name: req.body.name,
             grade: req.body.grade,
-            skillLevel: req.body.skillLevel,
-            phoneNumber: req.body.phoneNumber
+            phoneNumber: req.body.phoneNumber,
+            email: req.body.email,
+            interestInMeeting: req.body.interestInMeeting
         }
     });
 
