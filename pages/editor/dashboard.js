@@ -34,7 +34,7 @@ export function Navbar () {
   )
 }
 
-export function Code ({ defaultCode, onChange }) {
+export function Code ({ defaultValue, onChange }) {
   const editorRef = useRef(null);
   
   function handleEditorDidMount(editor, monaco) {
