@@ -1,4 +1,6 @@
 import Inter from '@/components/Inter'
+import { SignInButton, SignedIn, SignedOut } from '@clerk/nextjs'
+import { Button, Grid } from '@geist-ui/core'
 import Head from 'next/head'
 import Image from 'next/image'
 import { useEffect, useRef } from 'react'
@@ -15,21 +17,63 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <style>{`
+        body, html {
+          width: 100vw;
+          height: 100vh;
+          margin: 0px;
+          padding: 0px;
+          overflow: hidden;
+        }
+      `}</style>
       <div style={{
         width: '100vw',
         height: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center'
+        margin: '0px',
+        padding: '0px',
+        background: 'url("https://cloud-8lj4t1m8o-hack-club-bot.vercel.app/0image__45_-min__1_.png")'
       }}>
         <div style={{
-          textAlign: 'center'
+          position: 'absolute',
+          top: '0px',
+          left: '0px',
+          width: '100vw',
+          height: '100vh',
+          margin: '0px',
+          padding: '0px',
+          background: '#28432daa',
+          zIndex: 1
+        }}></div>
+        <div style={{
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: '100vw',
+          height: '100vh',
+          margin: '0px',
+          display: 'flex',
+          padding: '0px',
+          zIndex: 2,
+          color: 'white',
+          overflow: 'unset',
+          position: 'relative'
         }}>
-          <h1>Vaquero IDE</h1>
-          <h2>Sign In</h2>
-          <a href="/sign-in/">Sign In</a>
-          <p>Shared hosting for Irvine Hack Club</p>
+          <div style={{
+            textAlign: 'center'
+          }}>
+            <h1>Vaquero IDE</h1>
+            <p>An open source code editor for Irvine Hack Club</p>
+            <SignedOut>
+              <a href="/sign-in">
+                <Button type="success-light">Sign In</Button>
+              </a>
+            </SignedOut>
+            <SignedIn>
+              <a href="/ide">
+                <Button type="success-light">Dashboard</Button>
+              </a>
+            </SignedIn>
+          </div>
         </div>
       </div>
     </Inter>

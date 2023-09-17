@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import { authMiddleware } from "@clerk/nextjs";
 import { redirect } from "next/dist/server/api-utils";
 
-const test = null;
+const test = 'editor.vaquero.dev';
 
 function resolveHost (request) {
     const requestHeaders = new Headers(request.headers);
@@ -81,7 +81,7 @@ export default function middleware (request) {
 } // middleware to detect subdomain and log it to the console
 
 export const config = {
-    matcher: '/:path*',
+    matcher: ["/((?!.*\\..*|_next).*)","/","/(api|trpc)(.*)"]
 }
 
  
