@@ -55,7 +55,8 @@ export function Code ({ defaultValue, onChange }) {
         theme="vs-dark"
         options={{
           fontFamily: '"Victor Mono"',
-          fontSize: 14
+          fontSize: 14,
+          scrollBeyondLastLine: false
         }}
         defaultValue={defaultValue}
         onMount={handleEditorDidMount}
@@ -74,11 +75,12 @@ export default function Home() {
 
   function run () {
     setRunning(true);
+    const start = Date.now();
 
     CodeExec.with('javascript').run(
       new CodeExec.File('index.js', code)
     ).then(result => {
-      setOutput(result.stdout);
+      setOutput(`Finished in ${Date.now() - start}ms\n\n${result.output}`);
 
       setRunning(false);
     });
@@ -100,13 +102,10 @@ export default function Home() {
           <Page.Content>
             <h2>Editor</h2>
             <p>Here is an editor for you to write code.</p>
-            <Code defaultValue={`// Vaquero IDE\n// NodeJS v18.15.0"`} onChange={setCode} />
+            <Code defaultValue={`// Vaquero IDE\n// NodeJS v18.15.0`} onChange={setCode} />
             <pre><code>{output}</code></pre>
             <Button onClick={run} loading={running} disabled={running} type="success">Run</Button>
           </Page.Content>
-          <Page.Footer>
-            <h2>Vaquero IDE</h2>
-          </Page.Footer>
       </Page>
     </Inter>
   )
