@@ -69,7 +69,7 @@ export default function Home() {
               </a>
             </SignedOut>
             <SignedIn>
-              <a href="/ide">
+              <a href="/dashboard">
                 <Button type="success-light">Dashboard</Button>
               </a>
             </SignedIn>

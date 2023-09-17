@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import { authMiddleware } from "@clerk/nextjs";
 import { redirect } from "next/dist/server/api-utils";
 
-const test = 'editor.vaquero.dev';
+const test = null;
 
 function resolveHost (request) {
     const requestHeaders = new Headers(request.headers);
