@@ -101,7 +101,7 @@ export default function Home() {
             <h2>Editor</h2>
             <p>Here is an editor for you to write code.</p>
             <Code defaultValue={`// Vaquero IDE\n// NodeJS v18.15.0"`} onChange={setCode} />
-            <code><pre>{code}</pre></code>
+            <pre><code>{output}</code></pre>
             <Button onClick={run} loading={running} disabled={running} type="success">Run</Button>
           </Page.Content>
           <Page.Footer>
