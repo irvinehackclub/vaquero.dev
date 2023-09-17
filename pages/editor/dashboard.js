@@ -207,6 +207,8 @@ export default function Home() {
     style={{
       height: "calc(100vh - 64px)"
     }}
+    gutterSize={8}
+    snapOffset={20}
     minSize={400}
 >
     <div style={{

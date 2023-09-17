@@ -30,7 +30,7 @@ body:has(.thisPageIsClerkSignInOrSignUp):has(#__next > div div[class*="cl-intern
 }
 
 .gutter {
-    background-color: #eee;
+    background-color: #393b3f;
     background-repeat: no-repeat;
     background-position: 50%;
 }
