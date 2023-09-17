@@ -28,7 +28,7 @@ export default function Home() {
         }}>
           <h1>Vaquero IDE</h1>
           <h2>Sign In</h2>
-          <a href="/ide">Sign In</a>
+          <a href="https://accounts.vaquero.dev/sign-in">Sign In</a>
           <p>Shared hosting for Irvine Hack Club</p>
         </div>
       </div>
