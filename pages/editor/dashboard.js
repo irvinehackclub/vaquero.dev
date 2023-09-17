@@ -64,7 +64,7 @@ export function Code () {
         onMount={handleEditorDidMount}
         onChange={setCode}
       />
-      <VictorMono></VictorMono>
+      <p>{code}</p>
     </>
   )
 }
@@ -81,15 +81,15 @@ export default function Home() {
       <Navbar />
       <Page>
         <Page.Header>
-            <h2>Header</h2>
+            <h2>Code Repl</h2>
           </Page.Header>
           <Page.Content>
-            <h2>Hello, Everyone.</h2>
-            <p>This is a simulated page, you can click anywhere to close it.</p>
+            <h2>Editor</h2>
+            <p>Here is an editor for you to write code.</p>
             <Code />
           </Page.Content>
           <Page.Footer>
-            <h2>Footer</h2>
+            <h2>Vaquero IDE</h2>
           </Page.Footer>
       </Page>
     </Inter>
