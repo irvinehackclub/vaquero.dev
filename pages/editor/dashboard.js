@@ -73,7 +73,7 @@ export default function Home() {
 
   const [running, setRunning] = useState(false);
 
-  const [output, setOutput] = useState('');
+  const [output, setOutput] = useState('Press run to execute code.');
 
   function run () {
     setRunning(true);
