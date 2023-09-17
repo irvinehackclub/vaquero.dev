@@ -4,7 +4,7 @@ import { Breadcrumbs, Page } from '@geist-ui/core'
 import { Inbox, Home as HomeIcon } from '@geist-ui/icons'
 import Head from 'next/head'
 import Image from 'next/image'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Editor, { Monaco } from "@monaco-editor/react";
 
 
@@ -35,12 +35,13 @@ export function Navbar () {
 }
 
 export function Code () {
+  const defaultValue = "// some comment";
+
   const editorRef = useRef(null);
+  const [code, setCode] = useState(defaultValue);
   
   function handleEditorDidMount(editor, monaco) {
-    // here is the editor instance
-    // you can store it in `useRef` for further usage
-    console.log("hhh", editor, monaco);
+    console.log("editor mounted", editor, monaco);
     editorRef.current = editor;
   }
 
@@ -48,8 +49,10 @@ export function Code () {
     <Editor
       height="40vh"
       defaultLanguage="javascript"
-      defaultValue="// some comment"
+      theme="vs-dark"
+      defaultValue={defaultValue}
       onMount={handleEditorDidMount}
+      onChange={setCode}
     />
   )
 }
