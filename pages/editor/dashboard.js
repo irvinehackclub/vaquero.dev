@@ -5,9 +5,54 @@ import { Inbox, Home as HomeIcon } from '@geist-ui/icons'
 import Head from 'next/head'
 import Image from 'next/image'
 import { useEffect, useRef } from 'react'
+import Editor, { Monaco } from "@monaco-editor/react";
 
 
+export function Navbar () {
+  return (
+    <nav style={{
+      width: '100%',
+      height: '64px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      boxSizing: 'border-box',
+      padding: '0px 32px'
+    }}>
 
+      <Breadcrumbs>
+        <Breadcrumbs.Item href="/dashboard"><HomeIcon /></Breadcrumbs.Item>
+        {/* <Breadcrumbs.Item href=""><Inbox /> Inbox</Breadcrumbs.Item>
+        <Breadcrumbs.Item>Page</Breadcrumbs.Item> */}
+      </Breadcrumbs>
+
+      <div>
+        <UserButton signInUrl="/sign-in" signUpUrl="/sign-up" userProfileMode="modal" afterSignOutUrl="/" />
+      </div>
+
+    </nav>
+  )
+}
+
+export function Code () {
+  const editorRef = useRef(null);
+  
+  function handleEditorDidMount(editor, monaco) {
+    // here is the editor instance
+    // you can store it in `useRef` for further usage
+    console.log("hhh", editor, monaco);
+    editorRef.current = editor;
+  }
+
+  return (
+    <Editor
+      height="40vh"
+      defaultLanguage="javascript"
+      defaultValue="// some comment"
+      onMount={handleEditorDidMount}
+    />
+  )
+}
 
 export default function Home() {
   return (
@@ -18,27 +63,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <nav style={{
-        width: '100%',
-        height: '64px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        boxSizing: 'border-box',
-        padding: '0px 32px'
-      }}>
-
-        <Breadcrumbs>
-          <Breadcrumbs.Item href="/dashboard"><HomeIcon /></Breadcrumbs.Item>
-          <Breadcrumbs.Item href=""><Inbox /> Inbox</Breadcrumbs.Item>
-          <Breadcrumbs.Item>Page</Breadcrumbs.Item>
-        </Breadcrumbs>
-
-        <div>
-          <UserButton signInUrl="/sign-in" signUpUrl="/sign-up" userProfileMode="modal" afterSignOutUrl="/" />
-        </div>
-
-      </nav>
+      <Navbar />
       <Page>
         <Page.Header>
             <h2>Header</h2>
