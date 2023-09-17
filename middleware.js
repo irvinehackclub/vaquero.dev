@@ -1,7 +1,8 @@
 // middleware to detect subdomain and log it to the console
 
 import { NextResponse } from "next/server";
-import { authMiddleware, redirectToSignIn } from "@clerk/nextjs";
+import { authMiddleware } from "@clerk/nextjs";
+import { redirect } from "next/dist/server/api-utils";
 
 const test = null;
 
@@ -60,7 +61,7 @@ export default function middleware (request) {
             afterAuth(auth, req, evt) {
                 // handle users who aren't authenticated
                 if (!auth.userId && !auth.isPublicRoute) {
-                    return redirectToSignIn({ returnBackUrl: req.url });
+                    return redirect('/sign-in?next=' + encodeURIComponent(req.url));
                 }
 
                 return NextResponse.rewrite(
