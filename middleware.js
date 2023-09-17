@@ -56,7 +56,7 @@ export default function middleware (request) {
 
     if (scope == 'internal' && host.site == 'editor') {
         return authMiddleware({
-            publicRoutes: ['/'],
+            publicRoutes: ['/', '/sign-in', '/sign-up', '/sign-out'],
             afterAuth(auth, req, evt) {
                 // handle users who aren't authenticated
                 if (!auth.userId && !auth.isPublicRoute) {
