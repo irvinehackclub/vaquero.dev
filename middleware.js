@@ -59,6 +59,7 @@ export default function middleware (request) {
         return authMiddleware({
             publicRoutes: ['/', '/sign-in', '/sign-up', '/sign-out'],
             afterAuth(auth, req, evt) {
+                console.log({ auth, req, evt });
                 // handle users who aren't authenticated
                 if (!auth.userId && !auth.isPublicRoute) {
                     return NextResponse.redirect(request.nextUrl.origin + '/sign-in?next=' + encodeURIComponent(req.url));
