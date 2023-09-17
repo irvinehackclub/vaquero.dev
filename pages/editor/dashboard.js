@@ -1,5 +1,5 @@
 import Inter from '@/components/Inter'
-import { UserButton } from '@clerk/nextjs'
+import { ClerkLoaded, UserButton } from '@clerk/nextjs'
 import { Breadcrumbs, Button, Page } from '@geist-ui/core'
 import { Inbox, Home as HomeIcon } from '@geist-ui/icons'
 import Head from 'next/head'
@@ -27,7 +27,9 @@ export function Navbar () {
       </Breadcrumbs>
 
       <div>
-        <UserButton signInUrl="/sign-in" signUpUrl="/sign-up" userProfileMode="modal" afterSignOutUrl="/" />
+        <ClerkLoaded>
+          <UserButton signInUrl="/sign-in" signUpUrl="/sign-up" userProfileMode="modal" afterSignOutUrl="/" />
+        </ClerkLoaded>
       </div>
 
     </nav>
