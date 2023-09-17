@@ -71,6 +71,7 @@ export default function Home() {
           <Page.Content>
             <h2>Hello, Everyone.</h2>
             <p>This is a simulated page, you can click anywhere to close it.</p>
+            <Code />
           </Page.Content>
           <Page.Footer>
             <h2>Footer</h2>
