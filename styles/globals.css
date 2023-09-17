@@ -23,3 +23,23 @@ body:has(.thisPageIsClerkSignInOrSignUp):has(#__next > div div[class*="cl-intern
     background: url("https://cloud-8lj4t1m8o-hack-club-bot.vercel.app/0image__45_-min__1_.png");
     background-size: cover;
 }
+
+.split {
+    display: flex;
+    flex-direction: row;
+}
+
+.gutter {
+    background-color: #eee;
+    background-repeat: no-repeat;
+    background-position: 50%;
+}
+
+.gutter.gutter-horizontal {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
+    cursor: col-resize;
+}
+
+span.dot.geist-dot > span.label {
+    text-transform: unset!important;
+}
