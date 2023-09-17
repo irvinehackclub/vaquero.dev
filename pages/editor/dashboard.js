@@ -24,6 +24,7 @@ export default function Home() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
+        boxSizing: 'border-box',
         padding: '0px 32px'
       }}>
 
