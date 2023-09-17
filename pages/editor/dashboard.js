@@ -6,7 +6,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 import Editor, { Monaco } from "@monaco-editor/react";
-import JetBrainsMono from '@/components/JetBrainsMono'
+import VictorMono from '@/components/VictorMono'
 
 
 export function Navbar () {
@@ -53,13 +53,14 @@ export function Code () {
         defaultLanguage="javascript"
         theme="vs-dark"
         options={{
-          fontFamily: 'JetBrains Mono',
+          fontFamily: '"Victor Mono"',
+          fontSize: 14
         }}
         defaultValue={defaultValue}
         onMount={handleEditorDidMount}
         onChange={setCode}
       />
-      <JetBrainsMono></JetBrainsMono>
+      <VictorMono></VictorMono>
     </>
   )
 }
