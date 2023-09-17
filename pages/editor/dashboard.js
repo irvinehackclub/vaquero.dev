@@ -28,16 +28,19 @@ export default function Home() {
       }}>
 
         <Breadcrumbs>
-        <Breadcrumbs.Item href="/dashboard"><HomeIcon /></Breadcrumbs.Item>
-        <Breadcrumbs.Item href=""><Inbox /> Inbox</Breadcrumbs.Item>
-        <Breadcrumbs.Item>Page</Breadcrumbs.Item>
+          <Breadcrumbs.Item href="/dashboard"><HomeIcon /></Breadcrumbs.Item>
+          <Breadcrumbs.Item href=""><Inbox /> Inbox</Breadcrumbs.Item>
+          <Breadcrumbs.Item>Page</Breadcrumbs.Item>
         </Breadcrumbs>
+
+        <div>
+          <UserButton signInUrl="/sign-in" signUpUrl="/sign-up" userProfileMode="modal" afterSignOutUrl="/" />
+        </div>
 
       </nav>
       <Page>
         <Page.Header>
             <h2>Header</h2>
-            <UserButton signInUrl="/sign-in" signUpUrl="/sign-up" userProfileMode="modal" afterSignOutUrl="/" />
           </Page.Header>
           <Page.Content>
             <h2>Hello, Everyone.</h2>
