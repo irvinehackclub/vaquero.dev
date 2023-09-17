@@ -33,11 +33,11 @@ export default function Home() {
         <Breadcrumbs.Item>Page</Breadcrumbs.Item>
         </Breadcrumbs>
 
-        <UserButton signInUrl="/sign-in" signUpUrl="/sign-up" userProfileMode="modal" afterSignOutUrl="/" />
       </nav>
       <Page>
         <Page.Header>
             <h2>Header</h2>
+            <UserButton signInUrl="/sign-in" signUpUrl="/sign-up" userProfileMode="modal" afterSignOutUrl="/" />
           </Page.Header>
           <Page.Content>
             <h2>Hello, Everyone.</h2>
