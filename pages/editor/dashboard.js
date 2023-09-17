@@ -1,4 +1,5 @@
 import Inter from '@/components/Inter'
+import { UserButton } from '@clerk/nextjs'
 import { Breadcrumbs, Page } from '@geist-ui/core'
 import { Inbox, Home as HomeIcon } from '@geist-ui/icons'
 import Head from 'next/head'
@@ -31,6 +32,8 @@ export default function Home() {
         <Breadcrumbs.Item href=""><Inbox /> Inbox</Breadcrumbs.Item>
         <Breadcrumbs.Item>Page</Breadcrumbs.Item>
         </Breadcrumbs>
+
+        <UserButton signInUrl="/sign-in" signUpUrl="/sign-up" userProfileMode="navigation" afterSignOutUrl="/" />
       </nav>
       <Page>
         <Page.Header>
