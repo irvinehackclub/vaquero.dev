@@ -119,7 +119,7 @@ export default function Home() {
 
   const [running, setRunning] = useState(false);
 
-  const [output, setOutput] = useState(`Code output will be displayed here.\n\nPress "Run" to execute code.`);
+  const [output, setOutput] = useState(`Code output will be displayed here.\n\nPress "Run" to execute code.`.repeat(200));
   const [runStatus, setRunStatus] = useState({
     type: 'default', // "default" | "secondary" | "success" | "warning" | "error"
     name: "Ready"
@@ -154,7 +154,7 @@ export default function Home() {
     }
 
     const elapsed = Date.now() - start;
-    const time = elapsed >= 1000 ? `${Math.round(elapsed * 10) / 100}s` : `${elapsed}ms`;
+    const time = elapsed >= 1000 ? `${Math.round(elapsed / 10) / 100}s` : `${elapsed}ms`;
 
     setOutput(result.output);
 
@@ -186,6 +186,11 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <style>{`
+        body {
+          overflow-y: hidden;
+        }
+      `}</style>
       <Navbar>
         <div style={{
           display: 'flex',
@@ -227,10 +232,11 @@ export default function Home() {
               flexGrow: '1',
               margin: '0px',
               borderRadius: '0px'
-            }}><code>{output}</code></pre>
+            }}>{output}</pre>
 
       <div style={{
         height: '32px',
+        minHeight: '32px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
