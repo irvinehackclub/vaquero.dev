@@ -1,7 +1,7 @@
 // middleware to detect subdomain and log it to the console
 
 import { NextResponse } from "next/server";
-import { authMiddleware } from "@clerk/nextjs";
+import { authMiddleware, redirectToSignIn } from "@clerk/nextjs";
 
 const test = null;
 
