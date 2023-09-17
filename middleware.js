@@ -61,7 +61,7 @@ export default function middleware (request) {
             afterAuth(auth, req, evt) {
                 // handle users who aren't authenticated
                 if (!auth.userId && !auth.isPublicRoute) {
-                    return redirect('/sign-in?next=' + encodeURIComponent(req.url));
+                    return NextResponse.redirect('/sign-in?next=' + encodeURIComponent(req.url));
                 }
 
                 return NextResponse.rewrite(
