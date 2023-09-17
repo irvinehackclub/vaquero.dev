@@ -55,7 +55,19 @@ export default function middleware (request) {
     }
 
     if (scope == 'internal' && host.site == 'editor') {
-        return authMiddleware({})(request);
+        return authMiddleware({
+            publicRoutes: ['/'],
+            afterAuth(auth, req, evt) {
+                // handle users who aren't authenticated
+                if (!auth.userId && !auth.isPublicRoute) {
+                    return redirectToSignIn({ returnBackUrl: req.url });
+                }
+
+                return NextResponse.rewrite(
+                    new URL('/editor' + request.nextUrl.pathname, request.url)
+                );
+            }
+        })(request);
     }
 
     if (scope == 'project' || scope == 'user') {
