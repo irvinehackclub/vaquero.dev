@@ -187,10 +187,13 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Navbar>
-        <div>
+        <div style={{
+          display: 'flex',
+          gap: '10px'
+        }}>
           <Button onClick={run} loading={running} disabled={running} type="success">Run</Button>
 
-          <Select value={languageString} onChange={setLanguageString}>
+          <Select style={{ height: '40px' }} value={languageString} onChange={setLanguageString}>
             {Object.entries(languages).map(([language, { name }]) => (
               <Select.Option value={language}>{name}</Select.Option>
             ))}
