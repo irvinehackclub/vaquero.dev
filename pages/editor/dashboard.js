@@ -1,12 +1,12 @@
 import Inter from '@/components/Inter'
 import { UserButton } from '@clerk/nextjs'
-import { Breadcrumbs, Page } from '@geist-ui/core'
+import { Breadcrumbs, Button, Page } from '@geist-ui/core'
 import { Inbox, Home as HomeIcon } from '@geist-ui/icons'
 import Head from 'next/head'
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 import Editor, { Monaco } from "@monaco-editor/react";
-
+import CodeExec from 'code-exec'
 
 export function Navbar () {
   return (
@@ -34,11 +34,8 @@ export function Navbar () {
   )
 }
 
-export function Code () {
-  const defaultValue = "// some comment";
-
+export function Code ({ defaultCode, onChange }) {
   const editorRef = useRef(null);
-  const [code, setCode] = useState(defaultValue);
   
   function handleEditorDidMount(editor, monaco) {
     console.log("editor mounted", editor, monaco);
@@ -62,14 +59,31 @@ export function Code () {
         }}
         defaultValue={defaultValue}
         onMount={handleEditorDidMount}
-        onChange={setCode}
+        onChange={onChange}
       />
-      <p>{code}</p>
     </>
   )
 }
 
 export default function Home() {
+  const [code, setCode] = useState(`// Vaquero IDE\n// NodeJS v18.15.0"`);
+
+  const [running, setRunning] = useState(false);
+
+  const [output, setOutput] = useState('');
+
+  function run () {
+    setRunning(true);
+
+    CodeExec.with('javascript').run(
+      new CodeExec.File('index.js', code)
+    ).then(result => {
+      setOutput(result.stdout);
+
+      setRunning(false);
+    });
+  }
+
   return (
     <Inter>
       <Head>
@@ -86,7 +100,9 @@ export default function Home() {
           <Page.Content>
             <h2>Editor</h2>
             <p>Here is an editor for you to write code.</p>
-            <Code />
+            <Code defaultValue={`// Vaquero IDE\n// NodeJS v18.15.0"`} onChange={setCode} />
+            <code><pre>{code}</pre></code>
+            <Button onClick={run} loading={running} disabled={running} type="success">Run</Button>
           </Page.Content>
           <Page.Footer>
             <h2>Vaquero IDE</h2>
