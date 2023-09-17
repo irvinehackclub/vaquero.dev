@@ -1,6 +1,7 @@
 // middleware to detect subdomain and log it to the console
 
 import { NextResponse } from "next/server";
+import { authMiddleware } from "@clerk/nextjs";
 
 const test = null;
 
@@ -53,6 +54,10 @@ export default function middleware (request) {
         );
     }
 
+    if (scope == 'internal' && host.site == 'editor') {
+        return authMiddleware({})(request);
+    }
+
     if (scope == 'project' || scope == 'user') {
         const [path] = request.url.split('?');
 
@@ -65,3 +70,14 @@ export default function middleware (request) {
 export const config = {
     matcher: '/:path*',
 }
+
+ 
+// This example protects all routes including api/trpc routes
+// Please edit this to allow other routes to be public as needed.
+// See https://clerk.com/docs/references/nextjs/auth-middleware for more information about configuring your middleware
+// export default authMiddleware({});
+ 
+// export const config = {
+//       matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
+// };
+ 
