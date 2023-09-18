@@ -6,7 +6,7 @@ import { Inbox, Home as HomeIcon } from '@geist-ui/icons'
 import Head from 'next/head'
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
-import Editor, { Monaco } from "@monaco-editor/react";
+import MonacoEditor, { Monaco } from "@monaco-editor/react";
 import CodeExec from 'code-exec'
 
 import Split from "react-split"
@@ -58,7 +58,7 @@ export function Code ({ defaultValue, onChange, language = 'javascript' }) {
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin />
         <link href="https://fonts.googleapis.com/css2?family=Victor+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet" />
       </Head>
-      <Editor
+      <MonacoEditor
         height="100%"
         width="100%"
         language={language}
@@ -78,6 +78,14 @@ export function Code ({ defaultValue, onChange, language = 'javascript' }) {
 }
 
 export default function Editor () {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+  }, []);
+
   const [code, setCode] = useState(`// Vaquero IDE\n// NodeJS v18.15.0"`);
 
   const [languageString, setLanguageString] = useState('javascript');
@@ -165,9 +173,9 @@ export default function Editor () {
           display: 'flex',
           gap: '10px'
         }}>
-          <Button onClick={run} loading={running} disabled={running} type="success" color="#00db75" className={"run-button" + (running ? " run-button-running" : "")}>Run</Button>
+          <Button onClick={run} loading={running || loading} disabled={running || loading} type="success" color="#00db75" className={"run-button" + (running ? " run-button-running" : "")}>Run</Button>
 
-          <Select style={{ height: '40px' }} value={languageString} onChange={setLanguageString}>
+          <Select style={{ height: '40px' }} value={languageString} disabled={running || loading} onChange={setLanguageString}>
             {Object.entries(languages).map(([language, { name }]) => (
               <Select.Option value={language}>{name}</Select.Option>
             ))}
@@ -175,11 +183,26 @@ export default function Editor () {
 
         </div>
       </Navbar>
-
+        <div style={{
+          position: 'absolute',
+          top: 'calc(50% - 32px)',
+          left: 'calc(50%)',
+          transform: 'translate(-50%, -50%)',
+          pointerEvents: 'none',
+          opacity: loading ? 1 : 0,
+          transition: 'opacity 0.3s ease-in-out',
+          zIndex: 1000000
+        }}>
+          <h2>Loading</h2>
+        </div>
 <Split
     className="split"
     style={{
-      height: "calc(100vh - 64px)"
+      height: "calc(100vh - 64px)",
+      filter: loading ? 'blur(3px)' : 'none',
+      transition: 'filter 0.3s ease-in-out',
+      pointerEvents: loading ? 'none' : undefined,
+      userSelect: loading ? 'none' : undefined
     }}
     gutterSize={8}
     snapOffset={20}
