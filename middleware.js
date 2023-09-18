@@ -67,7 +67,7 @@ export default function middleware (request) {
 
                 
                 return NextResponse.rewrite(
-                    new URL('/editor/code', request.url);
+                    new URL('/editor/code', request.url)
                 );
 
                 return NextResponse.rewrite(
