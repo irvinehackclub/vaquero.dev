@@ -1,4 +1,5 @@
 import Inter from '@/components/Inter'
+import { Button } from '@geist-ui/core'
 import Head from 'next/head'
 import Image from 'next/image'
 import { useEffect, useRef } from 'react'
@@ -27,9 +28,13 @@ export default function Home() {
           textAlign: 'center'
         }}>
           <h1>vaquero.dev</h1>
-          <h2>🚧 Coming Soon 🚧</h2>
-          <p>Shared hosting for Irvine Hack Club</p>
-          <a href="https://editor.vaquero.dev">Editor</a>
+          <h2>Code Editor & Runner</h2>
+          <p>for Irvine Hack Club</p>
+          <a href="https://editor.vaquero.dev">
+            <Button>
+              Launch Editor
+            </Button>
+          </a>
         </div>
       </div>
     </Inter>
