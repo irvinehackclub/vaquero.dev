@@ -57,13 +57,18 @@ export default function middleware (request) {
 
     if (scope == 'internal' && host.site == 'editor') {
         return authMiddleware({
-            publicRoutes: ['/', '/sign-in', '/sign-up', '/sign-out', '/sign-in/[[...index]]', '/sign-up/[[...index]]', '/sign-out/[[...index]]', '/sign-in/sso-callback', '/sign-up/sso-callback', '/sign-up/continue'],
+            publicRoutes: ['/dashboard', '/code', '/', '/sign-in', '/sign-up', '/sign-out', '/sign-in/[[...index]]', '/sign-up/[[...index]]', '/sign-out/[[...index]]', '/sign-in/sso-callback', '/sign-up/sso-callback', '/sign-up/continue'],
             afterAuth(auth, req, evt) {
                 console.log({ auth, req, evt });
                 // handle users who aren't authenticated
                 if (!auth.userId && !auth.isPublicRoute) {
                     return NextResponse.redirect(request.nextUrl.origin + '/sign-in?next=' + encodeURIComponent(req.url));
                 }
+
+                
+                return NextResponse.rewrite(
+                    new URL('/editor/code')
+                );
 
                 return NextResponse.rewrite(
                     new URL('/editor' + request.nextUrl.pathname, request.url)

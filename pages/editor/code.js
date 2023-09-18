@@ -1,3 +1,4 @@
+import {dark, neobrutalism} from "@clerk/themes";
 import Inter from '@/components/Inter'
 import { ClerkLoaded, UserButton } from '@clerk/nextjs'
 import { Breadcrumbs, Button, Dot, Page, Select } from '@geist-ui/core'
@@ -33,7 +34,7 @@ export function Navbar ({ children, breadcrumbs }) {
 {children}
       <div>
         <ClerkLoaded>
-          <UserButton signInUrl="/sign-in" signUpUrl="/sign-up" userProfileMode="modal" afterSignOutUrl="/" />
+          <UserButton signInUrl="/sign-in" signUpUrl="/sign-up" userProfileMode="modal" afterSignOutUrl="/" appearance={dark} />
         </ClerkLoaded>
       </div>
 
@@ -198,7 +199,7 @@ export default function Home() {
         }
       `}</style>
       <Navbar breadcrumbs={[
-        <Breadcrumbs.Item href="/editor">Editor</Breadcrumbs.Item>
+        <Breadcrumbs.Item href="/code">Editor</Breadcrumbs.Item>
       ]}>
         <div style={{
           display: 'flex',
