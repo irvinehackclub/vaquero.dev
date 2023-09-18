@@ -31,7 +31,7 @@ export default function Home() {
           <h2>Code Editor & Runner</h2>
           <p>for Irvine Hack Club</p>
           <a href="https://editor.vaquero.dev">
-            <Button>
+            <Button type="secondary-light">
               Launch Editor
             </Button>
           </a>
