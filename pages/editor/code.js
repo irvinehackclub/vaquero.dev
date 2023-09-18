@@ -10,7 +10,7 @@ import CodeExec from 'code-exec'
 
 import Split from "react-split"
 
-export function Navbar ({ children }) {
+export function Navbar ({ children, breadcrumbs }) {
   return (
     <nav style={{
       width: '100%',
@@ -26,6 +26,7 @@ export function Navbar ({ children }) {
 
       <Breadcrumbs>
         <Breadcrumbs.Item href="/dashboard"><HomeIcon /></Breadcrumbs.Item>
+        {breadcrumbs}
         {/* <Breadcrumbs.Item href=""><Inbox /> Inbox</Breadcrumbs.Item>
         <Breadcrumbs.Item>Page</Breadcrumbs.Item> */}
       </Breadcrumbs>
@@ -196,7 +197,9 @@ export default function Home() {
           overflow-y: hidden;
         }
       `}</style>
-      <Navbar>
+      <Navbar breadcrumbs={[
+        <Breadcrumbs.Item href="/editor">Editor</Breadcrumbs.Item>
+      ]}>
         <div style={{
           display: 'flex',
           gap: '10px'
