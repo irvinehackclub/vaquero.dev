@@ -10,6 +10,7 @@ import Editor, { Monaco } from "@monaco-editor/react";
 import CodeExec from 'code-exec'
 
 import Split from "react-split"
+import { languages } from "@/lib/languages";
 
 export function Navbar ({ children, breadcrumbs }) {
   return (
@@ -76,49 +77,8 @@ export function Code ({ defaultValue, onChange, language = 'javascript' }) {
   )
 }
 
-export default function Home() {
+export default function Editor () {
   const [code, setCode] = useState(`// Vaquero IDE\n// NodeJS v18.15.0"`);
-
-  const languages = {
-    javascript: {
-      name: 'JavaScript',
-      editor: 'javascript',
-      entryPoint: 'index.js',
-      runtime: 'node-js'
-    },
-    typescript: {
-      name: 'TypeScript',
-      editor: 'typescript',
-      entryPoint: 'index.ts',
-      runtime: 'deno-ts',
-      icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Typescript_logo_2020.svg/2048px-Typescript_logo_2020.svg.png"
-    },
-    python: {
-      name: 'Python',
-      editor: 'python',
-      entryPoint: 'main.py',
-      runtime: 'python3'
-    },
-    bash: {
-      name: 'Bash',
-      editor: 'bash',
-      entryPoint: 'script.sh',
-      runtime: 'sh',
-      icon: "https://cloud-t3lu41126-hack-club-bot.vercel.app/0bash_dark-1331550886960171470.png"
-    },
-    java: {
-      name: "Java",
-      editor: 'java',
-      entryPoint: "Main.java",
-      runtime: "java"
-    },
-    ruby: {
-      name: "Ruby",
-      editor: "ruby",
-      entryPoint: "main.rb",
-      runtime: "ruby"
-    }
-  }
 
   const [languageString, setLanguageString] = useState('javascript');
 

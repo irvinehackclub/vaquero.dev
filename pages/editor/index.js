@@ -6,9 +6,9 @@ import Image from 'next/image'
 import { useEffect, useRef } from 'react'
 
 
-
-
 export default function Home() {
+  const liveAuth = false;
+
   return (
     <Inter>
       <Head>
@@ -63,16 +63,24 @@ export default function Home() {
           }}>
             <h1>Vaquero IDE</h1>
             <p>An open source code editor for Irvine Hack Club</p>
-            <SignedOut>
-              <a href="/sign-in">
-                <Button type="success-light">Sign In</Button>
+            {liveAuth ? (
+              <>
+                <SignedOut>
+                  <a href="/sign-in">
+                    <Button type="success-light">Sign In</Button>
+                  </a>
+                </SignedOut>
+                <SignedIn>
+                  <a href="/dashboard">
+                    <Button type="success-light">Dashboard</Button>
+                  </a>
+                </SignedIn>
+              </>
+            ) : (
+              <a href="/playground">
+                <Button type="success-light">Open Playground</Button>
               </a>
-            </SignedOut>
-            <SignedIn>
-              <a href="/dashboard">
-                <Button type="success-light">Dashboard</Button>
-              </a>
-            </SignedIn>
+            )}
           </div>
         </div>
       </div>
