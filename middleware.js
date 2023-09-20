@@ -10,11 +10,11 @@ function resolveHost (request) {
     const requestHeaders = new Headers(request.headers);
     let host = test ? test : requestHeaders.get('host');
 
+    if (host == 'vaquero.vercel.app') host = 'editor.vaquero.dev';
+
     const computeFragments = host.split('.').reverse().slice(2);
 
     if (host.startsWith('[::1]')) return { scope: 'internal', site: 'root' }
-
-    if (host == 'vaquero.vercel.app') host = 'editor.vaquero.dev';
 
     if (host.endsWith('.vaquero.dev')) {
         if (computeFragments.length == 1) {
