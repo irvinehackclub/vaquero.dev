@@ -1,8 +1,10 @@
-import { SignIn } from "@clerk/nextjs";
+import { ClerkLoaded, SignIn } from "@clerk/nextjs";
  
 const SignInPage = () => (
   <>
-    <SignIn path="/sign-in" routing="path" signUpUrl="/sign-up" />
+    <ClerkLoaded>
+      <SignIn path="/sign-in" routing="path" signUpUrl="/sign-up" />
+    </ClerkLoaded>
     <span style={{ display: 'none' }} className="thisPageIsClerkSignInOrSignUp"></span>
   </>
 );
