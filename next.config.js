@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  redirects: [
+  redirects: async () => [
     {
       source: "/remind",
       destination: "https://www.remind.com/join/ihs-hack",
