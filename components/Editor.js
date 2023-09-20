@@ -82,7 +82,7 @@ export function Code ({ value, defaultValue, onChange, language = 'javascript' }
   )
 }
 
-export default function Editor ({ load, save, showLanguageSwitcher = false, editorName }) {
+export default function Editor ({ explicitSave, load, save, showLanguageSwitcher = false, editorName }) {
   const [finishedLoadingAt, setFinishedLoadingAt] = useState(null);
   const loading = !finishedLoadingAt;
 
@@ -213,6 +213,7 @@ export default function Editor ({ load, save, showLanguageSwitcher = false, edit
               ))}
             </Select>
           }
+          {explicitSave && <Button onClick={() => explicitSave(code)} type="secondary" color="#00db75">Save</Button>}
 
         </div>
       </Navbar>
