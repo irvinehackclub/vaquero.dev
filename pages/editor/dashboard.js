@@ -7,13 +7,20 @@ import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 import CodeExec from 'code-exec'
 
-import { Navbar } from './code'
+import { Navbar } from '@/components/Editor'
+import { languages } from '@/lib/languages'
 
 function Projects ({ projects }) {
     const [drawerState, setDrawerState] = useState(false);
+    const [languageString, setLanguageString] = useState("javascript");
+    const [type, setType] = useState("web");
+
+    const formRef = useRef(null);
+
 
     return (
         <>
+
             <Drawer visible={drawerState} onClose={() => setDrawerState(false)} placement="right" style={{
                 textAlign: 'left',
                 maxWidth: '600px',
@@ -22,43 +29,68 @@ function Projects ({ projects }) {
                 <h2 style={{ marginBottom: '0px' }}>Let's build something new.</h2>
                 <p style={{ marginTop: '16px' }}>To create a new project, select a type, give it a name, and start coding!</p>
                 <Drawer.Content>
+                <form onSubmit={event => {
+                    event.preventDefault();
+                    return false;
+                }} action="/api/projects/new" method="POST" ref={formRef}>
+                    <Fieldset.Group value={type} onChange={setType}>
+                    <Fieldset label="web">
+                    <Fieldset.Title>Static Web Project</Fieldset.Title>
+                    <Fieldset.Subtitle style={{ marginBottom: '16px' }}>Build a project with the web technologies of HTML, CSS, and JavaScript.</Fieldset.Subtitle>
 
-                <Fieldset.Group value="web">
-                <Fieldset label="web">
-                <Fieldset.Title>Static Web Project</Fieldset.Title>
-                <Fieldset.Subtitle style={{ marginBottom: '16px' }}>Build a project with the web technologies of HTML, CSS, and JavaScript.</Fieldset.Subtitle>
+                        <Input name="webName" placeholder="Personal Website">
+                            Project Name
+                        </Input>
 
-                    <Input placeholder="Personal Website">
-                        Project Name
-                    </Input>
+                    <Fieldset.Footer>
+                        Using HTML, CSS, and JavaScript
+                        <Button onClick={() => formRef.current.submit()} auto scale={1/3} font="12px" type="success">Create</Button>
+                    </Fieldset.Footer>
+                    </Fieldset>
+                    <Fieldset label="terminal">
+                    <Fieldset.Title>Terminal Project</Fieldset.Title>
+                    <Fieldset.Subtitle style={{ marginBottom: '16px' }}>Create a project using various programming languages that run in the terminal.</Fieldset.Subtitle>
 
-                <Fieldset.Footer>
-                    Using HTML, CSS, and JavaScript
-                    <Button auto scale={1/3} font="12px" type="success">Create</Button>
-                </Fieldset.Footer>
-                </Fieldset>
-                <Fieldset label="terminal">
-                <Fieldset.Title>Terminal Project</Fieldset.Title>
-                <Fieldset.Subtitle style={{ marginBottom: '16px' }}>Create a project using various programming languages that run in the terminal.</Fieldset.Subtitle>
+                        <Input name="terminalName" placeholder="FizzBuzz Algorithm">
+                            Project Name
+                        </Input>
+                        <br /><br />
+                        <label style={{ marginBottom: '0.5em', display: 'inline-block' }}>
+                            <Text small style={{ color: '#999999' }}>
+                                Language
+                                </Text>
+                        </label>
+                        <br />
 
-                    <Input placeholder="FizzBuzz Algorithm">
-                        Project Name
-                    </Input>
+                        <Select value={languageString} onChange={setLanguageString}>
+                            {Object.entries(languages).map(([language, { name }]) => (
+                            <Select.Option value={language}>{name}</Select.Option>
+                            ))}
+                        </Select>
 
-                <Fieldset.Footer>
-                HTTP Knowledge Base
-                    <Button auto scale={1/3} font="12px" type="success">Create</Button>
-                </Fieldset.Footer>
-                </Fieldset>
-                <Fieldset label="hosted">
-                <Fieldset.Title>Hosted Project</Fieldset.Title>
-                <Fieldset.Subtitle>Launching soon, hosted projects are a combination of webeb and terminal projects. They allow you to combine the frontend of web with the backend of terminal to build amazing applications.</Fieldset.Subtitle>
-                <Fieldset.Footer>
-                    <span></span>
-                    <Button disabled auto scale={1/3} font="12px" type="success">Coming Soon</Button>
-                </Fieldset.Footer>
-                </Fieldset>
-                </Fieldset.Group>
+                        <span style={{ display: 'none' }}>
+                            <Input hidden style={{ display: 'none' }} name="terminalLanguage" value={languageString} />
+                        </span>
+
+                    <Fieldset.Footer>
+                    Using {languages[languageString].name}
+                        <Button onClick={() => formRef.current.submit()} auto scale={1/3} font="12px" type="success">Create</Button>
+                    </Fieldset.Footer>
+                    </Fieldset>
+                    <Fieldset label="hosted">
+                    <Fieldset.Title>Hosted Project</Fieldset.Title>
+                    <Fieldset.Subtitle>Launching soon, hosted projects are a combination of webeb and terminal projects. They allow you to combine the frontend of web with the backend of terminal to build amazing applications.</Fieldset.Subtitle>
+                    <Fieldset.Footer>
+                        <span></span>
+                        <Button disabled auto scale={1/3} font="12px" type="success">Coming Soon</Button>
+                    </Fieldset.Footer>
+                    </Fieldset>
+                    </Fieldset.Group>
+                    <span style={{ display: 'none' }}>
+                        <Input hidden name="type" value={type} />
+                    </span>
+
+                </form>
 
                 </Drawer.Content>
             </Drawer>

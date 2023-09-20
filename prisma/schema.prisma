@@ -35,7 +35,7 @@ model Project {
   files       File[]
   description String
   createdAt   DateTime @default(now())
-  ownerEmail  String
+  ownerId     String
 }
 
 model File {

@@ -65,6 +65,12 @@ export default function middleware (request) {
                     return NextResponse.redirect(request.nextUrl.origin + '/sign-in?next=' + encodeURIComponent(req.url));
                 }
 
+                if (request.nextUrl.pathname.startsWith('/api')) {
+                    return NextResponse.rewrite(
+                        new URL('/api/editor' + request.nextUrl.pathname.substring(4), request.url)
+                    );
+                }
+
                 return NextResponse.rewrite(
                     new URL('/editor' + request.nextUrl.pathname, request.url)
                 );

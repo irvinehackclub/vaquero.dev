@@ -11,6 +11,7 @@ import CodeExec from 'code-exec'
 
 import Split from "react-split"
 import { languages } from "@/lib/languages";
+import useInterval from "@/hooks/useInterval";
 
 export function Navbar ({ children, breadcrumbs }) {
   return (
@@ -43,7 +44,7 @@ export function Navbar ({ children, breadcrumbs }) {
   )
 }
 
-export function Code ({ defaultValue, onChange, language = 'javascript' }) {
+export function Code ({ value, defaultValue, onChange, language = 'javascript' }) {
   const editorRef = useRef(null);
   
   function handleEditorDidMount(editor, monaco) {
@@ -69,6 +70,7 @@ export function Code ({ defaultValue, onChange, language = 'javascript' }) {
           scrollBeyondLastLine: false,
           wordWrap: 'on',
         }}
+        value={value}
         defaultValue={defaultValue}
         onMount={handleEditorDidMount}
         onChange={onChange}
@@ -77,23 +79,41 @@ export function Code ({ defaultValue, onChange, language = 'javascript' }) {
   )
 }
 
-export default function Editor () {
+export default function Editor ({ load, save }) {
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 3000);
-  }, []);
-
-  const [code, setCode] = useState(`// Vaquero IDE\n// NodeJS v18.15.0"`);
+  const [code, setCode] = useState('');
+  const [lastEditTimestamps, setLastEditTimestamps] = useState([]);
+  const codeHasBeenEdited = () => {
+    setLastEditTimestamps([...lastEditTimestamps, Date.now()]);
+  }
 
   const [languageString, setLanguageString] = useState('javascript');
-
   const language = languages[languageString];
 
-  const [running, setRunning] = useState(false);
+  useEffect(() => {
+    async function loadEditor () {
+      const { language, code } = await load();
 
+      setLanguageString(language);
+      setCode(code);
+
+      setLoading(false);
+    }
+
+    loadEditor();
+  }, []);
+
+  useInterval(async () => {
+    console.log('save', loading);
+    if (!loading) await save({
+      language: languageString,
+      code
+    });
+
+    console.log('saved', loading);
+  }, 3000);
+
+  const [running, setRunning] = useState(false);
   const [output, setOutput] = useState(`Code output will be displayed here.\n\nPress "Run" to execute code.`);
   const [runStatus, setRunStatus] = useState({
     type: 'default', // "default" | "secondary" | "success" | "warning" | "error"
@@ -211,7 +231,9 @@ export default function Editor () {
     <div style={{
       height: '100%'
     }}>
-      <Code defaultValue={`// Vaquero IDE\n// NodeJS v18.15.0`} onChange={setCode} language={language.editor} />
+      <Code value={code} onChange={value => {
+        setCode(value);
+      }} language={language.editor} />
 
     </div>
     <div style={{
