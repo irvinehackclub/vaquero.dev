@@ -83,7 +83,9 @@ export function Code ({ value, defaultValue, onChange, language = 'javascript' }
 }
 
 export default function Editor ({ load, save, showLanguageSwitcher = false, editorName }) {
-  const [loading, setLoading] = useState(true);
+  const [finishedLoadingAt, setFinishedLoadingAt] = useState(null);
+  const loading = !finishedLoadingAt;
+
   const [code, setCode] = useState('');
   const [lastEditTimestamps, setLastEditTimestamps] = useState([]);
   const codeHasBeenEdited = () => {
@@ -104,18 +106,18 @@ export default function Editor ({ load, save, showLanguageSwitcher = false, edit
       setLanguageString(language);
       setCode(code);
 
-      setLoading(false);
+      setFinishedLoadingAt(Date.now());
     }
 
     loadEditor();
   }, []);
 
   useEffect(() => {
-    save({
+    if (finishedLoadingAt && finishedLoadingAt < Date.now() - 500) save({
       language: languageString,
       code
     });
-  }, [debouncedCode]);;
+  }, [debouncedCode, finishedLoadingAt]);;
 
   const [running, setRunning] = useState(false);
   const [output, setOutput] = useState(`Code output will be displayed here.\n\nPress "Run" to execute code.`);

@@ -72,6 +72,12 @@ export default function middleware (request) {
                     );
                 }
 
+                if (request.nextUrl.pathname.startsWith('/share')) {
+                    return NextResponse.rewrite(
+                        new URL('/api/editor/projects/share' + request.nextUrl.pathname.substring(6), request.url)
+                    );
+                }
+
                 return NextResponse.rewrite(
                     new URL('/editor' + request.nextUrl.pathname, request.url)
                 );
