@@ -1,3 +1,4 @@
+import { getAuth } from "@clerk/nextjs/server";
 import Inter from '@/components/Inter'
 import { ClerkLoaded, UserButton } from '@clerk/nextjs'
 import { Breadcrumbs, Button, Card, Divider, Dot, Drawer, Fieldset, Grid, Input, Page, Select, Text } from '@geist-ui/core'
@@ -9,6 +10,7 @@ import CodeExec from 'code-exec'
 
 import { Navbar } from '@/components/Editor'
 import { languages } from '@/lib/languages'
+import prisma from "@/lib/prisma";
 
 function Projects ({ projects }) {
     const [drawerState, setDrawerState] = useState(false);
@@ -98,10 +100,10 @@ function Projects ({ projects }) {
             <Grid.Container gap={3} className="projects">
                 {projects.map(project => (
                     <Grid xs={24} sm={12} md={8} lg={6} xl={4}>
-                        <a style={{ width: '100%' }} href="/code">
+                        <a style={{ width: '100%' }} href={project.url}>
                             <Card hoverable style={{ width: '100%', border: '1px solid #343434' }} className="project-card">
                                 <Fieldset.Title>{project.title}</Fieldset.Title>
-                                <Fieldset.Subtitle>{project.language}</Fieldset.Subtitle>
+                                <Fieldset.Subtitle>{languages[project.language].name}</Fieldset.Subtitle>
                             </Card>
                         </a>
                     </Grid>
@@ -119,7 +121,7 @@ function Projects ({ projects }) {
     )
 }
 
-export default function Home() {
+export default function Home({ projects }) {
   return (
     <Inter>
       <Head>
@@ -146,7 +148,6 @@ export default function Home() {
           display: 'flex',
           gap: '10px'
         }}>
-          <Button type="success">Start Coding</Button>
 
 
         </div>
@@ -164,13 +165,28 @@ export default function Home() {
                 <h2>Dashboard</h2>
             </Page.Header>
             <h3>Your Projects</h3>
-            <Projects projects={[
-                {
-                    title: "Starter Project",
-                    language: "JavaScript"
-                }
-            ]} />
+            <Projects projects={projects} />
         </Page>
     </Inter>
   )
+}
+
+export const getServerSideProps = async ({ req }) => {
+    const auth = getAuth(req);
+
+    const projects = await prisma.project.findMany({
+        where: {
+            ownerId: auth.userId
+        }
+    });
+
+    return {
+        props: {
+            projects: projects.map(project => ({
+                title: project.name,
+                language: project.language,
+                url: '/edit/' + project.identifier
+            }))
+        }
+    }
 }

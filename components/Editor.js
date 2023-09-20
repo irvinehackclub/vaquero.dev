@@ -13,6 +13,8 @@ import Split from "react-split"
 import { languages } from "@/lib/languages";
 import useInterval from "@/hooks/useInterval";
 
+import { useDebounce } from 'usehooks-ts'
+
 export function Navbar ({ children, breadcrumbs }) {
   return (
     <nav style={{
@@ -67,8 +69,9 @@ export function Code ({ value, defaultValue, onChange, language = 'javascript' }
         options={{
           fontFamily: '"Victor Mono"',
           fontSize: 14,
-          scrollBeyondLastLine: false,
+          scrollBeyondLastLine: true,
           wordWrap: 'on',
+          
         }}
         value={value}
         defaultValue={defaultValue}
@@ -79,7 +82,7 @@ export function Code ({ value, defaultValue, onChange, language = 'javascript' }
   )
 }
 
-export default function Editor ({ load, save }) {
+export default function Editor ({ load, save, showLanguageSwitcher = false, editorName }) {
   const [loading, setLoading] = useState(true);
   const [code, setCode] = useState('');
   const [lastEditTimestamps, setLastEditTimestamps] = useState([]);
@@ -87,12 +90,16 @@ export default function Editor ({ load, save }) {
     setLastEditTimestamps([...lastEditTimestamps, Date.now()]);
   }
 
+  const debouncedCode = useDebounce(code, 1000);
+
   const [languageString, setLanguageString] = useState('javascript');
   const language = languages[languageString];
 
   useEffect(() => {
     async function loadEditor () {
       const { language, code } = await load();
+
+      console.log('Loaded 1');
 
       setLanguageString(language);
       setCode(code);
@@ -103,15 +110,12 @@ export default function Editor ({ load, save }) {
     loadEditor();
   }, []);
 
-  useInterval(async () => {
-    console.log('save', loading);
-    if (!loading) await save({
+  useEffect(() => {
+    save({
       language: languageString,
       code
     });
-
-    console.log('saved', loading);
-  }, 3000);
+  }, [debouncedCode]);;
 
   const [running, setRunning] = useState(false);
   const [output, setOutput] = useState(`Code output will be displayed here.\n\nPress "Run" to execute code.`);
@@ -173,6 +177,12 @@ export default function Editor ({ load, save }) {
     setRunning(false);
   }
 
+  const [currentLink, setCurrentLink] = useState('#');
+
+  useEffect(() => {
+    setCurrentLink(window.location.href);
+  }, []);
+
   return (
     <Inter>
       <Head>
@@ -187,19 +197,20 @@ export default function Editor ({ load, save }) {
         }
       `}</style>
       <Navbar breadcrumbs={[
-        <Breadcrumbs.Item href="/code">Editor</Breadcrumbs.Item>
+        <Breadcrumbs.Item href={currentLink}>{editorName}</Breadcrumbs.Item>
       ]}>
         <div style={{
           display: 'flex',
           gap: '10px'
         }}>
           <Button onClick={run} loading={running || loading} disabled={running || loading} type="success" color="#00db75" className={"run-button" + (running ? " run-button-running" : "")}>Run</Button>
-
-          <Select style={{ height: '40px' }} value={languageString} disabled={running || loading} onChange={setLanguageString}>
-            {Object.entries(languages).map(([language, { name }]) => (
-              <Select.Option value={language}>{name}</Select.Option>
-            ))}
-          </Select>
+          {showLanguageSwitcher &&
+            <Select style={{ height: '40px' }} value={languageString} disabled={running || loading} onChange={setLanguageString}>
+              {Object.entries(languages).map(([language, { name }]) => (
+                <Select.Option value={language}>{name}</Select.Option>
+              ))}
+            </Select>
+          }
 
         </div>
       </Navbar>
@@ -242,12 +253,26 @@ export default function Editor ({ load, save }) {
       flexDirection: 'column',
       justifyContent: 'space-between'
     }}>
+      {language.runtime &&
             <pre style={{
               flexGrow: '1',
               margin: '0px',
               borderRadius: '0px',
               whiteSpace: 'pre-wrap'
             }} className="code-output">{output}</pre>
+          }
+
+          {language.customRuntime && (() => {
+            const CustomRuntime = language.customRuntime;
+            return (
+              <CustomRuntime style={{
+                flexGrow: '1',
+                margin: '0px',
+                borderRadius: '0px',
+                whiteSpace: 'pre-wrap'
+              }} code={code} />
+            )
+          })()}
 
       <div style={{
         height: '32px',

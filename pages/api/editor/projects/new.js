@@ -14,12 +14,12 @@ export default async function (req, res) {
         data: {
             name,
             language,
-            identifier: name.split(' ').join('_').split('').filter(char => char.match(/[a-z0-9_]/)).join('') || ('project' + Math.random().toString(36).substring(7)),
+            identifier: name.toLowerCase().split(' ').join('_').split('').filter(char => char.match(/[a-z0-9_]/)).join('') || ('project' + Math.random().toString(36).substring(7)),
             description: "New Project",
             ownerId: auth.userId,
             files: {
                 create: {
-                    content: '',
+                    content: languages[language].starter,
                     path: languages[language].entryPoint
                 }
             }

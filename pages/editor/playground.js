@@ -2,7 +2,7 @@ import Editor from "@/components/Editor"
 
 export default function Playground () {
     return (
-        <Editor load={async () => {
+        <Editor showLanguageSwitcher load={async () => {
             const code = localStorage.getItem("code");
             const language = localStorage.getItem("language");
 
@@ -17,6 +17,6 @@ export default function Playground () {
         }} save={async ({ code, language }) => {
             localStorage.setItem("code", code);
             localStorage.setItem("language", language);
-        }} />
+        }} editorName="Playground" />
     )
 }

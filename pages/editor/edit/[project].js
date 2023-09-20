@@ -1,28 +1,30 @@
 import Editor from "@/components/Editor"
 import prisma from "@/lib/prisma";
+import { ClerkLoaded } from "@clerk/nextjs";
 
-export default function Edit ({ project: { name, language, files } }) {
+export default function Edit ({ project: { id, name, language, files, fileId } }) {
     
     return (
-        <Editor load={async () => {
-            return {
-                language,
-                code: files[0].content
-            }
-        }} save={async ({ code, language }) => {
-            console.log('actually saving')
-            fetch("/api/projects/save", {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    identifier: name,
-                    code,
-                    language
-                })
-            });
-        }} />
+        <ClerkLoaded>
+            <Editor load={async () => {
+                return {
+                    language,
+                    code: files[0].content
+                }
+            }} save={async ({ code, language }) => {
+                console.log('actually saving')
+                fetch("/api/projects/saveFile", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        id: fileId,
+                        code
+                    })
+                });
+            }} editorName={name} />
+        </ClerkLoaded>
     )
 }
 
@@ -45,7 +47,9 @@ export const getServerSideProps = async ({ req, params }) => {
             project: {
                 name: project.name,
                 language: project.language,
-                files: project.files
+                files: project.files,
+                id: project.id,
+                fileId: project.files[0].id
             }
         }
     }
