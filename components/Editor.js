@@ -213,7 +213,7 @@ export default function Editor ({ explicitSave, load, save, showLanguageSwitcher
               ))}
             </Select>
           }
-          {explicitSave && <Button onClick={() => explicitSave(code)} type="secondary" color="#00db75">Save</Button>}
+          {explicitSave && <Button onClick={() => explicitSave({ code, language })} type="secondary" color="#00db75">Save</Button>}
 
         </div>
       </Navbar>

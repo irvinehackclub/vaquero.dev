@@ -1,4 +1,5 @@
 import Editor from "@/components/Editor"
+import { languages } from "@/lib/languages";
 
 export default function Playground () {
     return (
@@ -7,8 +8,8 @@ export default function Playground () {
             const language = localStorage.getItem("language");
 
             if (!code || !language) return {
-                code: "console.log('Hello, world!')",
-                language: "javascript"
+                code: languages.html.starter,
+                language: "html"
             }
 
             return {
@@ -17,7 +18,7 @@ export default function Playground () {
         }} save={async ({ code, language }) => {
             localStorage.setItem("code", code);
             localStorage.setItem("language", language);
-        }} editorName="Playground" explicitSave={code => {
+        }} editorName="Playground" explicitSave={({ code, language }) => {
             function download(filename, text) {
                 var element = document.createElement('a');
                 element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
@@ -31,8 +32,7 @@ export default function Playground () {
                 document.body.removeChild(element);
               }
 
-              download("code.html", code);
-              
+              download(language.entryPoint, code);
         }} />
     )
 }
