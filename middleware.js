@@ -8,11 +8,13 @@ const test = process.env.VERCEL_ENV == "development" ? "editor.vaquero.dev" : nu
 
 function resolveHost (request) {
     const requestHeaders = new Headers(request.headers);
-    const host = test ? test : requestHeaders.get('host');
+    let host = test ? test : requestHeaders.get('host');
 
     const computeFragments = host.split('.').reverse().slice(2);
 
     if (host.startsWith('[::1]')) return { scope: 'internal', site: 'root' }
+
+    if (host == 'vaquero.vercel.app') host = 'editor.vaquero.dev';
 
     if (host.endsWith('.vaquero.dev')) {
         if (computeFragments.length == 1) {
