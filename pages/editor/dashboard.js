@@ -81,7 +81,7 @@ function Projects ({ projects }) {
                     </Fieldset>
                     <Fieldset label="hosted">
                     <Fieldset.Title>Hosted Project</Fieldset.Title>
-                    <Fieldset.Subtitle>Launching soon, hosted projects are a combination of webeb and terminal projects. They allow you to combine the frontend of web with the backend of terminal to build amazing applications.</Fieldset.Subtitle>
+                    <Fieldset.Subtitle>Launching soon, hosted projects are a combination of web and terminal projects. They allow you to combine the frontend of web with the backend of terminal to build amazing applications.</Fieldset.Subtitle>
                     <Fieldset.Footer>
                         <span></span>
                         <Button disabled auto scale={1/3} font="12px" type="success">Coming Soon</Button>
