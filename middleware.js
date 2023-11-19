@@ -59,8 +59,10 @@ export default function middleware (request) {
 
     if (scope == 'internal' && host.site == 'editor') {
         return authMiddleware({
+            debug: true,
             publicRoutes: ['/playground', '/', '/sign-in', '/sign-up', '/sign-out', '/sign-in/[[...index]]', '/sign-up/[[...index]]', '/sign-out/[[...index]]', '/sign-in/sso-callback', '/sign-up/sso-callback', '/sign-up/continue'],
             afterAuth(auth, req, evt) {
+                console.log('afterAuth', auth, req, evt)
                 // handle users who aren't authenticated
                 if (!auth.userId && !auth.isPublicRoute) {
                     return NextResponse.redirect(request.nextUrl.origin + '/sign-in?next=' + encodeURIComponent(req.url));

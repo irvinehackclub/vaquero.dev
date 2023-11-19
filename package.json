@@ -10,7 +10,7 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
-    "@clerk/nextjs": "^4.23.5",
+    "@clerk/nextjs": "^4.27.1",
     "@clerk/themes": "^1.7.5",
     "@geist-ui/core": "^2.3.8",
     "@geist-ui/icons": "^1.0.2",
@@ -21,7 +21,7 @@
     "cookies": "^0.8.0",
     "install": "^0.13.0",
     "jsonwebtoken": "^9.0.2",
-    "next": "13.4.19",
+    "next": "^14.0.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-split": "^2.0.14",

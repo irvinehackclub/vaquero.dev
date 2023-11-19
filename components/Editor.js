@@ -2,7 +2,7 @@ import {dark, neobrutalism} from "@clerk/themes";
 import Inter from '@/components/Inter'
 import { ClerkLoaded, UserButton } from '@clerk/nextjs'
 import { Breadcrumbs, Button, Dot, Page, Select } from '@geist-ui/core'
-import { Inbox, Home as HomeIcon } from '@geist-ui/icons'
+import { Inbox, Home as HomeIcon, ExternalLink } from '@geist-ui/icons'
 import Head from 'next/head'
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
@@ -82,7 +82,7 @@ export function Code ({ value, defaultValue, onChange, language = 'javascript' }
   )
 }
 
-export default function Editor ({ explicitSave, load, save, showLanguageSwitcher = false, editorName }) {
+export default function Editor ({ previewUrl, explicitSave, load, save, showLanguageSwitcher = false, editorName }) {
   const [finishedLoadingAt, setFinishedLoadingAt] = useState(null);
   const loading = !finishedLoadingAt;
 
@@ -256,6 +256,34 @@ export default function Editor ({ explicitSave, load, save, showLanguageSwitcher
       flexDirection: 'column',
       justifyContent: 'space-between'
     }}>
+      {previewUrl && 
+        <div style={{
+          height: '32px',
+          minHeight: '32px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '4px',
+          gap: '4px',
+          boxSizing: 'border-box',
+          userSelect: 'none',
+        }}>
+          <input value={previewUrl} readOnly style={{
+            display: 'flex',
+            flexGrow: '1',
+            background: 'transparent',
+            padding: '4px',
+            boxSizing: 'border-box',
+            height: '100%',
+            border: '1px solid #222',
+            borderRadius: '4px',
+          }} />
+          <Button height={"24px"} icon={<ExternalLink />} width={"24px"} onClick={() => {
+            window.open(previewUrl, '_blank');
+          }}></Button>
+        </div>
+      }
+ 
       {language.runtime &&
             <pre style={{
               flexGrow: '1',

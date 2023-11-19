@@ -2,7 +2,7 @@ import Editor from "@/components/Editor"
 import prisma from "@/lib/prisma";
 import { ClerkLoaded } from "@clerk/nextjs";
 
-export default function Edit ({ project: { id, name, language, files, fileId } }) {
+export default function Edit ({ project: { id, name, language, files, fileId, identifier } }) {
     
     return (
         <ClerkLoaded>
@@ -23,7 +23,7 @@ export default function Edit ({ project: { id, name, language, files, fileId } }
                         code
                     })
                 });
-            }} editorName={name} />
+            }} editorName={name} previewUrl={language == 'html' ? `https://${identifier}.vaquero.dev` : ''} />
         </ClerkLoaded>
     )
 }
@@ -49,7 +49,8 @@ export const getServerSideProps = async ({ req, params }) => {
                 language: project.language,
                 files: project.files,
                 id: project.id,
-                fileId: project.files[0].id
+                fileId: project.files[0].id,
+                identifier: project.identifier
             }
         }
     }
