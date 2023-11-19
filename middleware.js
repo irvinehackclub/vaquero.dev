@@ -88,6 +88,10 @@ export default function middleware (request) {
     if (scope == 'project' || scope == 'user') {
         const [path] = request.url.split('?');
 
+        return NextResponse.rewrite(
+            new URL('/api/up/' + project + '/' + request.nextUrl.pathname.substring(1), request.url)
+        );
+
         const [body, response] = getProjectFile(path, host.project, host.user);
 
         return new NextResponse(body, response);
