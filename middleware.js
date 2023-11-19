@@ -89,7 +89,7 @@ export default function middleware (request) {
         const [path] = request.url.split('?');
 
         return NextResponse.rewrite(
-            new URL('/api/up/' + project + '/' + request.nextUrl.pathname.substring(1), request.url)
+            new URL('/api/up/' + host.project + '/' + request.nextUrl.pathname.substring(1), request.url)
         );
 
         const [body, response] = getProjectFile(path, host.project, host.user);
