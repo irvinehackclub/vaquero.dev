@@ -7,7 +7,7 @@ import { useEffect, useRef } from 'react'
 
 
 export default function Home() {
-  const liveAuth = false;
+  const liveAuth = true;
 
   return (
     <Inter>
