@@ -128,6 +128,21 @@ export default function Editor ({ previewUrl, explicitSave, load, save, showLang
 
 
   async function run () {
+    if (language.customRuntime) {
+      setRunning(true);
+      setRunStatus({
+        type: 'secondary',
+        name: 'Running...'
+      });
+      setOutput(code);
+      await new Promise(resolve => setTimeout(resolve, 250));
+      setRunning(false);
+      setRunStatus({
+        type: "success",
+        name: `Preview updated!`
+      });
+      return;
+    }
     setRunning(true);
     setRunStatus({
       type: 'secondary',
@@ -301,7 +316,7 @@ export default function Editor ({ previewUrl, explicitSave, load, save, showLang
                 margin: '0px',
                 borderRadius: '0px',
                 whiteSpace: 'pre-wrap'
-              }} code={code} />
+              }} code={output} />
             )
           })()}
 
