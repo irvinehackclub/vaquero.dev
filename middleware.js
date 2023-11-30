@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import { authMiddleware } from "@clerk/nextjs";
 import { redirect } from "next/dist/server/api-utils";
 
-const test = process.env.VERCEL_ENV == "development" ? "editor.vaquero.dev" : null;
+const test = process.env.VERCEL_ENV == "development" ? "vaquero.dev" : null;
 
 function resolveHost (request) {
     const requestHeaders = new Headers(request.headers);
@@ -60,7 +60,7 @@ export default function middleware (request) {
     if (scope == 'internal' && host.site == 'editor') {
         return authMiddleware({
             debug: true,
-            publicRoutes: ['/playground', '/', '/sign-in', '/sign-up', '/sign-out', '/sign-in/[[...index]]', '/sign-up/[[...index]]', '/sign-out/[[...index]]', '/sign-in/sso-callback', '/sign-up/sso-callback', '/sign-up/continue'],
+            publicRoutes: ['/playground', '/', '/sign-in', '/sign-up', '/sign-out', '/sign-in/[[...index]]', '/sign-up/[[...index]]', '/sign-out/[[...index]]', '/sign-in/sso-callback', '/sign-up/sso-callback', '/sign-up/continue', '/about'],
             afterAuth(auth, req, evt) {
                 console.log('afterAuth', auth, req, evt)
                 // handle users who aren't authenticated
