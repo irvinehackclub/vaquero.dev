@@ -1,9 +1,11 @@
 import Editor from "@/components/Editor"
 import prisma from "@/lib/prisma";
 import { ClerkLoaded } from "@clerk/nextjs";
+import { useState } from "react";
 
 export default function Edit ({ project: { id, name, language, files, fileId, identifier } }) {
-    
+    const [upToDateIdentifier, setUpToDateIdentifier] = useState(identifier);
+
     return (
         <ClerkLoaded>
             <Editor load={async () => {
@@ -23,7 +25,22 @@ export default function Edit ({ project: { id, name, language, files, fileId, id
                         code
                     })
                 });
-            }} editorName={name} previewUrl={language == 'html' ? `https://${identifier}.vaquero.dev` : ''} />
+            }} identifier={identifier} rename={async newName => {
+                const { success } = await fetch("/api/projects/changeIdentifier", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        oldIdentifier: upToDateIdentifier,
+                        newIdentifier: newName
+                    })
+                }).then(res => res.json());
+                if (success) {
+                    setUpToDateIdentifier(newName);
+                }
+                return success;
+            }} editorName={name} previewUrl={language == 'html' ? `https://${upToDateIdentifier}.vaquero.dev` : ''} />
         </ClerkLoaded>
     )
 }

@@ -1,8 +1,8 @@
 import {dark, neobrutalism} from "@clerk/themes";
 import Inter from '@/components/Inter'
 import { ClerkLoaded, UserButton } from '@clerk/nextjs'
-import { Breadcrumbs, Button, Dot, Page, Select } from '@geist-ui/core'
-import { Inbox, Home as HomeIcon, ExternalLink } from '@geist-ui/icons'
+import { Breadcrumbs, Button, Dot, Input, Modal, Page, Select, useToasts } from '@geist-ui/core'
+import { Inbox, Home as HomeIcon, ExternalLink, Edit, Edit2, Edit3, Settings } from '@geist-ui/icons'
 import Head from 'next/head'
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
@@ -82,7 +82,7 @@ export function Code ({ value, defaultValue, onChange, language = 'javascript' }
   )
 }
 
-export default function Editor ({ previewUrl, explicitSave, load, save, showLanguageSwitcher = false, editorName }) {
+export default function Editor ({ identifier, rename, previewUrl, explicitSave, load, save, showLanguageSwitcher = false, editorName }) {
   const [finishedLoadingAt, setFinishedLoadingAt] = useState(null);
   const loading = !finishedLoadingAt;
 
@@ -96,6 +96,11 @@ export default function Editor ({ previewUrl, explicitSave, load, save, showLang
 
   const [languageString, setLanguageString] = useState('javascript');
   const language = languages[languageString];
+
+  const [renameModal, setRenameModal] = useState(false);
+  const [newIdentifier, setNewIdentifier] = useState(identifier);
+
+  const { setToast } = useToasts()
 
   useEffect(() => {
     async function loadEditor () {
@@ -220,6 +225,32 @@ export default function Editor ({ previewUrl, explicitSave, load, save, showLang
           display: 'flex',
           gap: '10px'
         }}>
+          {identifier && rename && (
+            <>
+              <Button icon={<Settings />} onClick={() => {
+                setRenameModal(true);
+              }} auto />
+              <Modal visible={renameModal} onClose={() => setRenameModal(false)}>
+                <Modal.Title>Project Settings</Modal.Title>
+                <Modal.Subtitle>Configure your project</Modal.Subtitle>
+                <Modal.Content>
+                  <Input width="100%" labelRight=".vaquero.dev" placeholder="Project Name" value={newIdentifier} onChange={e => setNewIdentifier(e.target.value.toLowerCase().split(' ').join('_').split('').filter(char => char.match(/[a-z0-9_]/)).join(''))}>
+                    Project URL
+                  </Input>
+                </Modal.Content>
+                <Modal.Action passive onClick={() => setRenameModal(false)}>Cancel</Modal.Action>
+                <Modal.Action onClick={async () => {
+                  const success = await rename(newIdentifier);
+                  
+                  if (success) {
+                    setToast({ text: 'Your project has been renamed successfully!', type: 'success' })
+                  } else {
+                    setToast({ text: 'That name is taken!', type: 'error' })
+                  }
+                }} disabled={newIdentifier == identifier} passive={newIdentifier == identifier}>Save</Modal.Action>
+              </Modal>
+            </>
+          )}
           <Button onClick={run} loading={running || loading} disabled={running || loading} type="success" color="#00db75" className={"run-button" + (running ? " run-button-running" : "")}>Run</Button>
           {showLanguageSwitcher &&
             <Select style={{ height: '40px' }} value={languageString} disabled={running || loading} onChange={setLanguageString}>
