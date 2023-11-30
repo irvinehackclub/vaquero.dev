@@ -1,11 +1,16 @@
+import { clerkClient } from "@clerk/nextjs";
 import { languages } from "@/lib/languages";
 import prisma from "@/lib/prisma";
 import { getAuth } from "@clerk/nextjs/server";
 
 export default async function (req, res) {
-    const auth = getAuth(req);
+    const { userId } = getAuth(req);
 
     const { webName, terminalName, terminalLanguage, type } = req.body;
+
+    const user = userId ? await clerkClient.users.getUser(userId) : null;
+
+    const prepend = user?.username || user?.firstName || Math.floor(Math.random() * 100)
 
     const name = type == 'web' ? webName : terminalName;
     const language = type == 'web' ? 'html' : terminalLanguage;
@@ -14,9 +19,9 @@ export default async function (req, res) {
         data: {
             name,
             language,
-            identifier: name.toLowerCase().split(' ').join('_').split('').filter(char => char.match(/[a-z0-9_]/)).join('') || ('project' + Math.random().toString(36).substring(7)),
+            identifier: prepend + "_" + name.toLowerCase().split(' ').join('_').split('').filter(char => char.match(/[a-z0-9_]/)).join('') || ('project' + Math.random().toString(36).substring(7)),
             description: "New Project",
-            ownerId: auth.userId,
+            ownerId: userId,
             files: {
                 create: {
                     content: languages[language].starter,
