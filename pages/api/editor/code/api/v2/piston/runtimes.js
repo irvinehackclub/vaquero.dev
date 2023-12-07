@@ -1,5 +1,5 @@
 export default async function runtimes (req, res) {
-    return await fetch('http://emkc.org/api/v2/piston/runtimes/', {
+    return await fetch('https://emkc.org/api/v2/piston/runtimes', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
