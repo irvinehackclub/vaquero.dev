@@ -10,8 +10,8 @@ const nextConfig = {
   ],
   rewrites: async () => [
     {
-      source: "/editor/__exec/:path*",
-      destination: "http://emkc.org/:path*",
+      source: "/editor/__exec/api/v2/piston/execute/",
+      destination: "http://emkc.org/api/v2/piston/execute/",
     },
   ]
 }
