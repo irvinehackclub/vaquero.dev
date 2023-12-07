@@ -7,12 +7,6 @@ const nextConfig = {
       destination: "https://www.remind.com/join/ihs-hack",
       permanent: true
     }
-  ],
-  rewrites: async () => [
-    {
-      source: "/editor/__exec/api/v2/piston/execute/",
-      destination: "http://emkc.org/api/v2/piston/execute/",
-    },
   ]
 }
 
