@@ -10,7 +10,7 @@ const nextConfig = {
   ],
   rewrites: async () => [
     {
-      source: "/__exec/:path*",
+      source: "/editor/__exec/:path*",
       destination: "http://emkc.org/:path*",
     },
   ]
