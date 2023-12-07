@@ -158,7 +158,7 @@ export default function Editor ({ identifier, rename, previewUrl, explicitSave, 
 
     let result;
     try {
-      result = await CodeExec.with(language.runtime, "editor.vaquero.dev/__exec").run(
+      result = await CodeExec.with(language.runtime, "editor.vaquero.dev/api/code").run(
         new CodeExec.File(language.entryPoint, code)
       );
     } catch (err) {
