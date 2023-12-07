@@ -5,5 +5,5 @@ export default async function execute (req, res) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(req.body)
-    }).then(r => r.json()).then(r => res.json(r));
+    }).then(r => r.text()).then(r => res.send(r));
 }
