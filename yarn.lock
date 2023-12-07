@@ -462,10 +462,10 @@ client-only@0.0.1:
   resolved "https://registry.yarnpkg.com/client-only/-/client-only-0.0.1.tgz#38bba5d403c41ab150bff64a95c85013cf73bca1"
   integrity sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==
 
-code-exec@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/code-exec/-/code-exec-1.0.0.tgz#800b2e5b970221fe3cabb38826aac9956723cc66"
-  integrity sha512-9dmmWR6dJttvMv21t310R5KzBIbighwWaPtI69H2nSvNFvUKrXzLyyP7RH40mq/rrExypXxpFLTw8xVBeVUVmA==
+code-exec@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/code-exec/-/code-exec-1.0.1.tgz#ef73ac65f98052206b42949381cccb56eb006d39"
+  integrity sha512-YbHx1l+jSa6+Wj+hV/3mVStTAjDyccyCKNR5yPUf1RF7O4IQToVglY8A+iijoL7mtHTKwic4GmD9D1aNNF/oUQ==
   dependencies:
     typescript "^5.2.2"
 
