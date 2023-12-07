@@ -7,5 +7,5 @@ export default async function execute (req, res) {
             'User-Agent': 'insomnia/8.4.5'
         },
         body: JSON.stringify(req.body)
-    }).then(r => r.text()).then(r => res.send(r));
+    }).then(r => r.json()).then(r => res.json(r));
 }

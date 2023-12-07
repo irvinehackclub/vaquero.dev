@@ -4,5 +4,5 @@ export default async function runtimes (req, res) {
         headers: {
             'Content-Type': 'application/json'
         },
-    }).then(r => r.text()).then(r => res.send(r));
+    }).then(r => r.json()).then(r => res.json(r));
 }
