@@ -80,6 +80,7 @@ export function Code ({ value, defaultValue, onChange, language = 'javascript' }
       />
     </>
   )
+  
 }
 
 export default function Editor ({ identifier, rename, previewUrl, explicitSave, load, save, showLanguageSwitcher = false, editorName }) {
