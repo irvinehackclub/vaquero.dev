@@ -80,7 +80,7 @@ export function Code ({ value, defaultValue, onChange, language = 'javascript' }
       />
     </>
   )
-  
+
 }
 
 export default function Editor ({ identifier, rename, previewUrl, explicitSave, load, save, showLanguageSwitcher = false, editorName }) {
@@ -140,6 +140,7 @@ export default function Editor ({ identifier, rename, previewUrl, explicitSave, 
         type: 'secondary',
         name: 'Running...'
       });
+      setRunId(r => r + 1);
       setOutput(code);
       await new Promise(resolve => setTimeout(resolve, 250));
       setRunning(false);
@@ -201,6 +202,7 @@ export default function Editor ({ identifier, rename, previewUrl, explicitSave, 
   }
 
   const [currentLink, setCurrentLink] = useState('#');
+  const [runId, setRunId] = useState(1)
 
   useEffect(() => {
     setCurrentLink(window.location.href);
@@ -348,7 +350,7 @@ export default function Editor ({ identifier, rename, previewUrl, explicitSave, 
                 margin: '0px',
                 borderRadius: '0px',
                 whiteSpace: 'pre-wrap'
-              }} code={output} url={`https://${identifier}.vaquero.dev`} />
+              }} code={output} url={`https://${identifier}.vaquero.dev?nocache=${runId}`} />
             )
           })()}
 
