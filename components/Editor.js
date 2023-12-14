@@ -347,7 +347,7 @@ export default function Editor ({ identifier, rename, previewUrl, explicitSave, 
                 margin: '0px',
                 borderRadius: '0px',
                 whiteSpace: 'pre-wrap'
-              }} code={output} />
+              }} url={`https://${identifier}.vaquero.dev`} />
             )
           })()}
 
