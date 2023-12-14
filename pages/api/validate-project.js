@@ -5,6 +5,6 @@ export default async function handler (req, res) {
 
     res.json({
         id,
-        success: await verify(id)
+        ...(await verify(id))
     });
 }
