@@ -19,7 +19,6 @@ export default function Home() {
             body {
                 width: 100vw;
                 height: 100vh;
-                overflow: hidden;
                 background: url("https://cloud-8lj4t1m8o-hack-club-bot.vercel.app/0image__45_-min__1_.png");
                 background-size: cover;
             }

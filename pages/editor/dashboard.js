@@ -131,10 +131,6 @@ export default function Home({ projects }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <style>{`
-        body {
-          overflow-y: hidden;
-        }
-
         .project-card {
             cursor: pointer;
         }

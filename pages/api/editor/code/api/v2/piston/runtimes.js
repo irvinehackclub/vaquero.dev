@@ -9,5 +9,5 @@ export default async function runtimes (req, res) {
 
     console.log("OUTPUT:" + output);
 
-    res.json(output);
+    res.send(output);
 }

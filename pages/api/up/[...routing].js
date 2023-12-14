@@ -1,4 +1,6 @@
 import prisma from "@/lib/prisma";
+import { generate } from "@/lib/projectIds";
+import { setCookie } from 'cookies-next';
 
 export default async function handler (req, res) {
     const { routing: [project, ...route] } = req.query;
@@ -11,6 +13,8 @@ export default async function handler (req, res) {
             files: true
         }
     });
+
+    setCookie('vaqprojid', generate(obj), { req, res, httpOnly: false });
 
     if (obj.language == 'html') {
         res.setHeader('Content-Type', 'text/html');
