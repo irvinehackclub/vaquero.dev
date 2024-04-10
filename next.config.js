@@ -6,6 +6,11 @@ const nextConfig = {
       source: "/remind",
       destination: "https://www.remind.com/join/ihs-hack",
       permanent: true
+    },
+    {
+      source: "/discord",
+      destination: "https://discord.gg/RcJpnuTDj6",
+      permanent: true
     }
   ]
 }
