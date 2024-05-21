@@ -293,6 +293,11 @@ export default function Editor ({ identifier, rename, previewUrl, explicitSave, 
 >
     <div style={{
       height: '100%'
+    }} onKeyPress={e => {
+      const shouldRun = e.key == "Enter" && e.shiftKey;
+      if (shouldRun) {
+        run();
+      }
     }}>
       <Code value={code} onChange={value => {
         setCode(value);
