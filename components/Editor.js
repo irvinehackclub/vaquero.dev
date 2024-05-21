@@ -297,6 +297,7 @@ export default function Editor ({ identifier, rename, previewUrl, explicitSave, 
       const shouldRun = e.key == "Enter" && e.shiftKey;
       if (shouldRun) {
         run();
+        e.preventDefault();
       }
     }}>
       <Code value={code} onChange={value => {
