@@ -81,7 +81,7 @@ function Projects({ projects, drawerState, setDrawerState, projectName, setProje
                             </Fieldset>
                             <Fieldset label="hosted">
                                 <Fieldset.Title>Hosted Project</Fieldset.Title>
-                                <Fieldset.Subtitle>Launching soon, hosted projects are a combination of webeb and terminal projects. They allow you to combine the frontend of web with the backend of terminal to build amazing applications.</Fieldset.Subtitle>
+                                <Fieldset.Subtitle>Launching soon, hosted projects are a combination of web and terminal projects. They allow you to combine the frontend of web with the backend of terminal to build amazing applications.</Fieldset.Subtitle>
                                 <Fieldset.Footer>
                                     <span></span>
                                     <Button disabled auto scale={1 / 3} font="12px" type="success">Coming Soon</Button>
@@ -92,29 +92,7 @@ function Projects({ projects, drawerState, setDrawerState, projectName, setProje
                             <Input hidden name="type" value={type} />
                         </span>
 
-<<<<<<< HEAD
-                    <Fieldset.Footer>
-                    Using {languages[languageString].name}
-                        <Button onClick={() => formRef.current.submit()} auto scale={1/3} font="12px" type="success">Create</Button>
-                    </Fieldset.Footer>
-                    </Fieldset>
-                    <Fieldset label="hosted">
-                    <Fieldset.Title>Hosted Project</Fieldset.Title>
-                    <Fieldset.Subtitle>Launching soon, hosted projects are a combination of web and terminal projects. They allow you to combine the frontend of web with the backend of terminal to build amazing applications.</Fieldset.Subtitle>
-                    <Fieldset.Footer>
-                        <span></span>
-                        <Button disabled auto scale={1/3} font="12px" type="success">Coming Soon</Button>
-                    </Fieldset.Footer>
-                    </Fieldset>
-                    </Fieldset.Group>
-                    <span style={{ display: 'none' }}>
-                        <Input hidden name="type" value={type} />
-                    </span>
-
-                </form>
-=======
                     </form>
->>>>>>> 9848c89 (Changes)
 
                 </Drawer.Content>
             </Drawer>
