@@ -296,6 +296,10 @@ export default function Editor ({ identifier, rename, previewUrl, explicitSave, 
     }} onKeyPress={e => {
       const shouldRun = e.key == "Enter" && e.shiftKey;
       if (shouldRun) {
+        save({
+          language: languageString,
+          code
+        });
         run();
         e.preventDefault();
       }
