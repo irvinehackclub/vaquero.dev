@@ -1,7 +1,7 @@
 import { dark, neobrutalism } from "@clerk/themes";
 import Inter from '@/components/Inter'
 import { ClerkLoaded, UserButton } from '@clerk/nextjs'
-import { Breadcrumbs, Button, Dot, Input, Modal, Page, Select, Text, useToasts } from '@geist-ui/core'
+import { Breadcrumbs, Button, ButtonDropdown, Dot, Input, Modal, Page, Select, Text, useToasts } from '@geist-ui/core'
 import { Inbox, Home as HomeIcon, ExternalLink, Edit, Edit2, Edit3, Settings } from '@geist-ui/icons'
 import Head from 'next/head'
 import Image from 'next/image'
@@ -236,9 +236,13 @@ export default function Editor({ identifier, rename, previewUrl, explicitSave, l
                 <Modal.Title>Project Settings</Modal.Title>
                 <Modal.Subtitle>Configure your project</Modal.Subtitle>
                 <Modal.Content>
-                  <Input width="100%" labelRight=".vaquero.dev" placeholder="Project Name" value={newIdentifier} onChange={e => setNewIdentifier(e.target.value.toLowerCase().split(' ').join('_').split('').filter(char => char.match(/[a-z0-9_]/)).join(''))}>
+                  <Input width="100%" labelRight=".vaquero.dev" mb={1} placeholder="Project Name" value={newIdentifier} onChange={e => setNewIdentifier(e.target.value.toLowerCase().split(' ').join('_').split('').filter(char => char.match(/[a-z0-9_]/)).join(''))}>
                     Project URL
                   </Input>
+                  <Text small type="secondary" mt={2} style={{ display: "block" }}>Hack Club Boba Drops</Text>
+                  <a href={`https://hack.club/ihs-boba-submit?website=${encodeURIComponent(identifier)}`} target="_blank">
+                    <Button type="success" mt={1/2}>Submit Website</Button>
+                  </a>
                 </Modal.Content>
                 <Modal.Action passive onClick={() => setRenameModal(false)}>Cancel</Modal.Action>
                 <Modal.Action onClick={async () => {
@@ -412,15 +416,13 @@ export default function Editor({ identifier, rename, previewUrl, explicitSave, l
           <div style={{
             display: "flex"
           }}>
-
-          {language.resources ? <iframe src={language.resources} style={{
-            border: "none",
-            width: "100%"
-          }}></iframe>: <>
-            <Text h3>Resources</Text>
-            <Text>Unfortunately, there are no resources available for this language yet.</Text>
-          </>} 
-
+            {language.resources ? <iframe src={language.resources} style={{
+              border: "none",
+              width: "100%"
+            }}></iframe> : <>
+              <Text h3>Resources</Text>
+              <Text>Unfortunately, there are no resources available for this language yet.</Text>
+            </>} 
           </div>
 
 
