@@ -409,12 +409,19 @@ export default function Editor({ identifier, rename, previewUrl, explicitSave, l
             </div>
           </div>
 
-          {language.resources ? <div style={{ display: "flex" }}>
-            <iframe src={language.resources} style={{
-              border: "none",
-              width: "100%"
-            }}></iframe>
-          </div>: <></>} 
+          <div style={{
+            display: "flex"
+          }}>
+
+          {language.resources ? <iframe src={language.resources} style={{
+            border: "none",
+            width: "100%"
+          }}></iframe>: <>
+            <Text h3>Resources</Text>
+            <Text>Unfortunately, there are no resources available for this language yet.</Text>
+          </>} 
+
+          </div>
 
 
         </Split>
