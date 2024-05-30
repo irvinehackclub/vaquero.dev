@@ -1,7 +1,7 @@
-import {dark, neobrutalism} from "@clerk/themes";
+import { dark, neobrutalism } from "@clerk/themes";
 import Inter from '@/components/Inter'
 import { ClerkLoaded, UserButton } from '@clerk/nextjs'
-import { Breadcrumbs, Button, Dot, Input, Modal, Page, Select, useToasts } from '@geist-ui/core'
+import { Breadcrumbs, Button, Dot, Input, Modal, Page, Select, Text, useToasts } from '@geist-ui/core'
 import { Inbox, Home as HomeIcon, ExternalLink, Edit, Edit2, Edit3, Settings } from '@geist-ui/icons'
 import Head from 'next/head'
 import Image from 'next/image'
@@ -12,10 +12,9 @@ import CodeExec from 'code-exec'
 import Split from "react-split"
 import { languages } from "@/lib/languages";
 import useInterval from "@/hooks/useInterval";
-
 import { useDebounce } from 'usehooks-ts'
 
-export function Navbar ({ children, breadcrumbs }) {
+export function Navbar({ children, breadcrumbs }) {
   return (
     <nav style={{
       width: '100%',
@@ -35,7 +34,7 @@ export function Navbar ({ children, breadcrumbs }) {
         {/* <Breadcrumbs.Item href=""><Inbox /> Inbox</Breadcrumbs.Item>
         <Breadcrumbs.Item>Page</Breadcrumbs.Item> */}
       </Breadcrumbs>
-{children}
+      {children}
       <div>
         <ClerkLoaded>
           <UserButton signInUrl="/sign-in" signUpUrl="/sign-up" userProfileMode="modal" afterSignOutUrl="/" appearance={dark} />
@@ -46,9 +45,9 @@ export function Navbar ({ children, breadcrumbs }) {
   )
 }
 
-export function Code ({ value, defaultValue, onChange, language = 'javascript' }) {
+export function Code({ value, defaultValue, onChange, language = 'javascript' }) {
   const editorRef = useRef(null);
-  
+
   function handleEditorDidMount(editor, monaco) {
     console.log("editor mounted", editor, monaco);
     editorRef.current = editor;
@@ -71,7 +70,7 @@ export function Code ({ value, defaultValue, onChange, language = 'javascript' }
           fontSize: 14,
           scrollBeyondLastLine: true,
           wordWrap: 'on',
-          
+
         }}
         value={value}
         defaultValue={defaultValue}
@@ -83,7 +82,7 @@ export function Code ({ value, defaultValue, onChange, language = 'javascript' }
 
 }
 
-export default function Editor ({ identifier, rename, previewUrl, explicitSave, load, save, showLanguageSwitcher = false, editorName }) {
+export default function Editor({ identifier, rename, previewUrl, explicitSave, load, save, showLanguageSwitcher = false, editorName }) {
   const [finishedLoadingAt, setFinishedLoadingAt] = useState(null);
   const loading = !finishedLoadingAt;
 
@@ -104,7 +103,7 @@ export default function Editor ({ identifier, rename, previewUrl, explicitSave, 
   const { setToast } = useToasts()
 
   useEffect(() => {
-    async function loadEditor () {
+    async function loadEditor() {
       const { language, code } = await load();
 
       console.log('Loaded 1');
@@ -133,7 +132,7 @@ export default function Editor ({ identifier, rename, previewUrl, explicitSave, 
   });
 
 
-  async function run () {
+  async function run() {
     if (language.customRuntime) {
       setRunning(true);
       setRunStatus({
@@ -244,7 +243,7 @@ export default function Editor ({ identifier, rename, previewUrl, explicitSave, 
                 <Modal.Action passive onClick={() => setRenameModal(false)}>Cancel</Modal.Action>
                 <Modal.Action onClick={async () => {
                   const success = await rename(newIdentifier);
-                  
+
                   if (success) {
                     setToast({ text: 'Your project has been renamed successfully!', type: 'success' })
                   } else {
@@ -266,137 +265,162 @@ export default function Editor ({ identifier, rename, previewUrl, explicitSave, 
 
         </div>
       </Navbar>
+      <div style={{
+        position: 'absolute',
+        top: 'calc(50% - 32px)',
+        left: 'calc(50%)',
+        transform: 'translate(-50%, -50%)',
+        pointerEvents: 'none',
+        opacity: loading ? 1 : 0,
+        transition: 'opacity 0.3s ease-in-out',
+        zIndex: 1000000
+      }}>
+        <h2>Loading</h2>
+      </div>
+      <Split
+        className="split"
+        style={{
+          height: "calc(100vh - 64px)",
+          filter: loading ? 'blur(3px)' : 'none',
+          transition: 'filter 0.3s ease-in-out',
+          pointerEvents: loading ? 'none' : undefined,
+          userSelect: loading ? 'none' : undefined
+        }}
+        gutterSize={8}
+        snapOffset={20}
+        minSize={400}
+      >
         <div style={{
-          position: 'absolute',
-          top: 'calc(50% - 32px)',
-          left: 'calc(50%)',
-          transform: 'translate(-50%, -50%)',
-          pointerEvents: 'none',
-          opacity: loading ? 1 : 0,
-          transition: 'opacity 0.3s ease-in-out',
-          zIndex: 1000000
-        }}>
-          <h2>Loading</h2>
-        </div>
-<Split
-    className="split"
-    style={{
-      height: "calc(100vh - 64px)",
-      filter: loading ? 'blur(3px)' : 'none',
-      transition: 'filter 0.3s ease-in-out',
-      pointerEvents: loading ? 'none' : undefined,
-      userSelect: loading ? 'none' : undefined
-    }}
-    gutterSize={8}
-    snapOffset={20}
-    minSize={400}
->
-    <div style={{
-      height: '100%'
-    }} onKeyPress={e => {
-      const shouldRun = e.key == "Enter" && e.shiftKey;
-      if (shouldRun) {
-        save({
-          language: languageString,
-          code
-        });
-        run();
-        e.preventDefault();
-      }
-    }}>
-      <Code value={code} onChange={value => {
-        setCode(value);
-      }} language={language.editor} />
-
-    </div>
-    <div style={{
-      height: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'space-between'
-    }}>
-      {previewUrl && 
-        <div style={{
-          height: '32px',
-          minHeight: '32px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '4px',
-          gap: '4px',
-          boxSizing: 'border-box',
-          userSelect: 'none',
-        }}>
-          <input value={previewUrl} readOnly style={{
-            display: 'flex',
-            flexGrow: '1',
-            background: 'transparent',
-            padding: '4px',
-            boxSizing: 'border-box',
-            height: '100%',
-            border: '1px solid #222',
-            borderRadius: '4px',
-          }} />
-          <Button height={"24px"} icon={<ExternalLink />} width={"24px"} onClick={() => {
-            window.open(previewUrl, '_blank');
-          }}></Button>
-        </div>
-      }
- 
-      {language.runtime &&
-            <pre style={{
-              flexGrow: '1',
-              margin: '0px',
-              borderRadius: '0px',
-              whiteSpace: 'pre-wrap'
-            }} className="code-output">{output}</pre>
+          height: '100%'
+        }} onKeyPress={e => {
+          const shouldRun = e.key == "Enter" && e.shiftKey;
+          if (shouldRun) {
+            save({
+              language: languageString,
+              code
+            });
+            run();
+            e.preventDefault();
           }
+        }}>
+          <Code value={code} onChange={value => {
+            setCode(value);
+          }} language={language.editor} />
 
-          {language.customRuntime && (() => {
-            const CustomRuntime = language.customRuntime;
-            return (
-              <CustomRuntime style={{
+        </div>
+
+        <Split
+          style={{
+            height: "100%",
+            display: "flex",
+            flexDirection: "column"
+          }}
+          gutterSize={8}
+          snapOffset={0}
+          minSize={[400, 50]}
+          direction="vertical"
+        >
+
+          <div style={{
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between'
+          }}>
+            {previewUrl &&
+              <div style={{
+                height: '32px',
+                minHeight: '32px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '4px',
+                gap: '4px',
+                boxSizing: 'border-box',
+                userSelect: 'none',
+              }}>
+                <input value={previewUrl} readOnly style={{
+                  display: 'flex',
+                  flexGrow: '1',
+                  background: 'transparent',
+                  padding: '4px',
+                  boxSizing: 'border-box',
+                  height: '100%',
+                  border: '1px solid #222',
+                  borderRadius: '4px',
+                }} />
+                <Button height={"24px"} icon={<ExternalLink />} width={"24px"} onClick={() => {
+                  window.open(previewUrl, '_blank');
+                }}></Button>
+              </div>
+            }
+
+            {language.runtime &&
+              <pre style={{
                 flexGrow: '1',
                 margin: '0px',
                 borderRadius: '0px',
                 whiteSpace: 'pre-wrap'
-              }} code={output} url={`https://${identifier}.vaquero.dev?nocache=${runId}`} />
-            )
-          })()}
+              }} className="code-output">{output}</pre>
+            }
 
-      <div style={{
-        height: '32px',
-        minHeight: '32px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '0px 8px',
-        userSelect: 'none',
-      }}>
-            <Dot type={runStatus.type} className="geist-dot">{runStatus.name}</Dot>
-      <div style={{
-        height: '100%',
-        lineHeight: '0px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '4px'
-      }}>
-        <div style={{
-          height: '100%',
-          padding: '4px',
-          boxSizing: 'border-box',
-        }}>
-          <img style={{
-            height: '100%',
-            borderRadius: '4px',
-          }} src={language.icon ?? `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${language.editor}/${language.editor}-original.svg`} />
-        </div>
-        {language.name}
-      </div>
+            {language.customRuntime && (() => {
+              const CustomRuntime = language.customRuntime;
+              return (
+                <CustomRuntime style={{
+                  flexGrow: '1',
+                  margin: '0px',
+                  borderRadius: '0px',
+                  whiteSpace: 'pre-wrap'
+                }} code={output} url={`https://${identifier}.vaquero.dev?nocache=${runId}`} />
+              )
+            })()}
+
+            <div style={{
+              height: '32px',
+              minHeight: '32px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '0px 8px',
+              userSelect: 'none',
+            }}>
+              <Dot type={runStatus.type} className="geist-dot">{runStatus.name}</Dot>
+              <div style={{
+                height: '100%',
+                lineHeight: '0px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '4px'
+              }}>
+                <div style={{
+                  height: '100%',
+                  padding: '4px',
+                  boxSizing: 'border-box'
+                }}>
+                  <img style={{
+                    height: '100%',
+                    borderRadius: '4px',
+                  }} src={language.icon ?? ("https://cdn.jsdelivr.net/gh/devicons/devicon/icons/" + language.editor + "/" + language.editor + "-original.svg")} />
+                </div>
+                {language.name}
+              </div>
             </div>
-    </div>
-</Split>
+          </div>
+
+          {language.resources ? <div style={{ display: "flex" }}>
+            <iframe src={language.resources} style={{
+              border: "none",
+              width: "100%"
+            }}></iframe>
+          </div>: <></>} 
+
+
+        </Split>
+
+
+      </Split>
     </Inter>
   )
 }
