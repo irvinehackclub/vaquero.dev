@@ -16,7 +16,7 @@
     "@geist-ui/icons": "^1.0.2",
     "@monaco-editor/react": "^4.5.2",
     "@prisma/client": "^5.2.0",
-    "code-exec": "^1.0.1",
+    "code-exec": "^1.1.0",
     "codemirror": "^6.0.1",
     "cookies": "^0.8.0",
     "cookies-next": "^4.1.0",
