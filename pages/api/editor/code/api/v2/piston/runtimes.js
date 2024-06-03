@@ -9,5 +9,6 @@ export default async function runtimes (req, res) {
 
     console.log("OUTPUT:" + output);
 
+    res.setHeader("Access-Control-Allow-Origin", "*");
     res.send(output);
 }

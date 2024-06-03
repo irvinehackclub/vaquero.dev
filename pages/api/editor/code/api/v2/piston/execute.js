@@ -11,5 +11,6 @@ export default async function execute (req, res) {
 
     console.log("OUTPUT:", output);
 
+    res.setHeader("Access-Control-Allow-Origin", "*");
     res.json(output);
 }
