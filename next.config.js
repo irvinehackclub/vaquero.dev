@@ -16,7 +16,6 @@ const nextConfig = {
   headers: async () => {
     return [
         {
-            // matching all API routes
             source: "/api/editor/code/api/v2/piston/:path*",
             headers: [
                 { key: "Access-Control-Allow-Credentials", value: "true" },
