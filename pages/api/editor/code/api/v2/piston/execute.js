@@ -6,10 +6,10 @@ export default async function execute (req, res) {
             'Content-Type': 'application/json',
             'User-Agent': 'insomnia/8.4.5'
         },
-        body: JSON.stringify(req.body)
+        body: req.body
     }).then(r => r.json());
 
-    console.log("OUTPUT:" + output);
+    console.log("OUTPUT:", output);
 
     res.json(output);
 }
