@@ -1,18 +1,19 @@
 import { dark, neobrutalism } from "@clerk/themes";
 import Inter from '@/components/Inter'
 import { ClerkLoaded, UserButton } from '@clerk/nextjs'
-import { Breadcrumbs, Button, ButtonDropdown, Dot, Input, Modal, Page, Select, Text, useToasts } from '@geist-ui/core'
+import { Breadcrumbs, Button, ButtonDropdown, Dot, Input, Modal, Page, Select, Spacer, Text, Tree, useToasts } from '@geist-ui/core'
 import { Inbox, Home as HomeIcon, ExternalLink, Edit, Edit2, Edit3, Settings } from '@geist-ui/icons'
 import Head from 'next/head'
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
-import MonacoEditor, { Monaco } from "@monaco-editor/react";
+import MonacoEditor, { Monaco, useMonaco } from "@monaco-editor/react";
 import CodeExec from 'code-exec'
 
 import Split from "react-split"
 import { languages } from "@/lib/languages";
 import useInterval from "@/hooks/useInterval";
 import { useDebounce } from 'usehooks-ts'
+import GitHubDark from "@/lib/themes/GitHubDark";
 
 export function Navbar({ children, breadcrumbs }) {
   return (
@@ -47,6 +48,13 @@ export function Navbar({ children, breadcrumbs }) {
 
 export function Code({ value, defaultValue, onChange, language = 'javascript' }) {
   const editorRef = useRef(null);
+  const monaco = useMonaco();
+  useEffect(() => {
+    if (monaco) {
+      monaco.editor.defineTheme("gh-dark", GitHubDark);
+      monaco.editor.setTheme("gh-dark");
+    }
+  }, [monaco]);
 
   function handleEditorDidMount(editor, monaco) {
     console.log("editor mounted", editor, monaco);
@@ -64,13 +72,15 @@ export function Code({ value, defaultValue, onChange, language = 'javascript' })
         height="100%"
         width="100%"
         language={language}
-        theme="vs-dark"
+        // theme="vs-dark"
         options={{
           fontFamily: '"Victor Mono"',
           fontSize: 14,
           scrollBeyondLastLine: true,
           wordWrap: 'on',
-
+          fontLigatures: true,
+          formatOnPaste: true,
+          lineNumbersMinChars: 4
         }}
         value={value}
         defaultValue={defaultValue}
@@ -78,6 +88,60 @@ export function Code({ value, defaultValue, onChange, language = 'javascript' })
         onChange={onChange}
       />
     </>
+  )
+
+}
+
+function FileTree ({ language }) {
+  const { setToast } = useToasts()
+  const handler = path => setToast({ text: path })
+  const blurHandler = e => e.target.blur();
+  const files = [
+    {
+      name: "Code Editor",
+      language
+    }
+  ]
+  return (
+    <div style={{
+      height: "100%"
+    }}>
+      <style>{`
+        .file-btn {
+          display: relative;
+          top: 0px;
+          left: 0px;
+          z-index: 10;
+        }
+        .file-btn:hover {
+          z-index: 100;
+        }
+      `}</style>
+      {files.map(({
+        name,
+        language
+      }, i) => (
+        <>
+          <Button width="100%" onMouseLeave={blurHandler} onClick={blurHandler} scale={1 / 2} style={{
+            borderRadius: "0px",
+            textAlign: "left",
+            textTransform: "none",
+            border: "none"
+          }} className="file-btn" icon={<>
+            <img src={languages[language].icon ?? ("https://cdn.jsdelivr.net/gh/devicons/devicon/icons/" + languages[language].editor + "/" + languages[language].editor + "-original.svg")} style={{
+              height: "18px"
+            }} />
+          </>}>
+            <span style={{
+              marginLeft: "1rem"
+            }}>
+              {name}
+            </span>
+          </Button>
+          <hr style={{ margin: "0px" }} />
+        </>
+      ))}
+    </div>
   )
 
 }
@@ -241,7 +305,7 @@ export default function Editor({ identifier, rename, previewUrl, explicitSave, l
                   </Input>
                   <Text small type="secondary" mt={2} style={{ display: "block" }}>Hack Club Boba Drops</Text>
                   <a href={`https://hack.club/ihs-boba-submit?website=${encodeURIComponent(identifier)}`} target="_blank">
-                    <Button type="success" mt={1/2}>Submit Website</Button>
+                    <Button type="success" mt={1 / 2}>Submit Website</Button>
                   </a>
                 </Modal.Content>
                 <Modal.Action passive onClick={() => setRenameModal(false)}>Cancel</Modal.Action>
@@ -292,8 +356,11 @@ export default function Editor({ identifier, rename, previewUrl, explicitSave, l
         }}
         gutterSize={8}
         snapOffset={20}
-        minSize={400}
+        minSize={[100, 300, 300]}
+        maxSize={[200, Infinity, Infinity]}
+        sizes={[10, 60, 30]}
       >
+        <FileTree language={languageString} />
         <div style={{
           height: '100%'
         }} onKeyPress={e => {
@@ -422,7 +489,7 @@ export default function Editor({ identifier, rename, previewUrl, explicitSave, l
             }}></iframe> : <>
               <Text h3>Resources</Text>
               <Text>Unfortunately, there are no resources available for this language yet.</Text>
-            </>} 
+            </>}
           </div>
 
 
