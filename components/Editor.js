@@ -386,9 +386,9 @@ export default function Editor({ identifier, rename, previewUrl, editable, expli
         }}>
           {identifier && rename && (
             <>
-              <Button icon={<Settings />} onClick={() => {
+              {editable && <Button icon={<Settings />} onClick={() => {
                 setRenameModal(true);
-              }} auto />
+              }} auto />}
               <Modal visible={renameModal} onClose={() => setRenameModal(false)}>
                 <Modal.Title>Project Settings</Modal.Title>
                 <Modal.Subtitle>Configure your project</Modal.Subtitle>
