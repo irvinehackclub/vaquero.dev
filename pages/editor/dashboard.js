@@ -1,7 +1,7 @@
-import { getAuth } from "@clerk/nextjs/server";
+import { getAuth, clerkClient } from "@clerk/nextjs/server";
 import Inter from '@/components/Inter'
 import { ClerkLoaded, UserButton } from '@clerk/nextjs'
-import { Breadcrumbs, Button, Card, Divider, Dot, Drawer, Fieldset, Grid, Input, Page, Select, Text, useToasts } from '@geist-ui/core'
+import { Breadcrumbs, Modal, Button, Card, Divider, Dot, Drawer, Fieldset, Grid, Input, Page, Select, Text, useToasts } from '@geist-ui/core'
 import { Inbox, Home as HomeIcon, PlusCircle } from '@geist-ui/icons'
 import Head from 'next/head'
 import Image from 'next/image'
@@ -12,6 +12,7 @@ import { Navbar } from '@/components/Editor'
 import { languages } from '@/lib/languages'
 import prisma from "@/lib/prisma";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 function Projects({ projects, drawerState, setDrawerState, projectName, setProjectName }) {
     const [languageString, setLanguageString] = useState("javascript");
@@ -121,11 +122,15 @@ function Projects({ projects, drawerState, setDrawerState, projectName, setProje
     )
 }
 
-export default function Home({ projects }) {
+export default function Home({ projects, user }) {
     const [drawerState, setDrawerState] = useState(false);
     const [projectName, setProjectName] = useState("");
     const router = useRouter();
     const toasts = useToasts();
+
+    const [attendance, setAttendance] = useState(false);
+    const [meetingCode, setMeetingCode] = useState("");
+
 
     return (
         <Inter>
@@ -168,7 +173,7 @@ export default function Home({ projects }) {
                 </Page.Header>
 
 
-                <a style={{ width: '100%' }} href={"javascript:;"} onClick={async () => {
+                {/* <a style={{ width: '100%' }} href={"javascript:;"} onClick={async () => {
                     toasts.setToast({
                         text: "Opening the code editor, please wait...",
                         type: "default"
@@ -191,7 +196,25 @@ export default function Home({ projects }) {
                         <Fieldset.Title>Hack Club Boba Drops <span style={{ fontFamily: "Inter" }}>{' '}&nbsp;→</span></Fieldset.Title>
                         <Fieldset.Subtitle>Build a website, get free boba</Fieldset.Subtitle>
                     </Card>
-                </a>
+                </a> */}
+
+                <Card hoverable style={{ width: '100%', border: '1px solid #343434' }} className="project-card" mb={2} onClick={() => setAttendance(true)}>
+                    <Fieldset.Title>Meeting Check-In <span style={{ fontFamily: "Inter" }}>{' '}&nbsp;→</span></Fieldset.Title>
+                    <Fieldset.Subtitle>Log your attendance for an Irvine Hack Club meeting</Fieldset.Subtitle>
+                </Card>
+
+                <Modal visible={attendance} onClose={() => setAttendance(false)}>
+                    <Modal.Title>Check-In</Modal.Title>
+                    <Modal.Subtitle>{user.name} • {new Date().toDateString()}</Modal.Subtitle>
+                    <Modal.Content>
+                        <Input label="Meeting Code" width="100%" maxlength={6} value={meetingCode} onChange={e => setMeetingCode(e.target.value.toUpperCase())} style={{
+                            textTransform: "uppercase",
+                            letterSpacing: "10px"
+                        }} />
+                    </Modal.Content>
+                    <Modal.Action passive onClick={() => setAttendance(false)}>Cancel</Modal.Action>
+                    <Modal.Action>Submit</Modal.Action>
+                </Modal>
 
                 <h3>Your Projects</h3>
                 <Projects projects={projects} drawerState={drawerState} setDrawerState={setDrawerState} />
@@ -202,6 +225,9 @@ export default function Home({ projects }) {
 
 export const getServerSideProps = async ({ req }) => {
     const auth = getAuth(req);
+
+    const user = auth.userId ? await (clerkClient.users.getUser(auth.userId)) : null;
+
 
     const projects = await prisma.project.findMany({
         where: {
@@ -215,7 +241,12 @@ export const getServerSideProps = async ({ req }) => {
                 title: project.name,
                 language: project.language,
                 url: '/edit/' + project.identifier
-            }))
+            })),
+            user: {
+                email: user.externalAccounts[0]?.emailAddress,
+                name: user.firstName + ' ' + user.lastName,
+                id: user.id
+            }
         }
     }
 }
