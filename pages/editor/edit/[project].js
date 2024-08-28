@@ -33,7 +33,7 @@ export default function Edit ({ project }) {
 
     return (
         <ClerkLoaded>
-            <Editor load={async () => {
+            <Editor editable load={async () => {
                 return {
                     language,
                     code: files[0].content

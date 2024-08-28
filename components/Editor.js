@@ -15,7 +15,7 @@ import useInterval from "@/hooks/useInterval";
 import { useDebounce } from 'usehooks-ts'
 import GitHubDark from "@/lib/themes/GitHubDark";
 
-export function Navbar({ children, breadcrumbs }) {
+export function Navbar({ children, breadcrumbs, authed }) {
   return (
     <nav style={{
       width: '100%',
@@ -37,9 +37,9 @@ export function Navbar({ children, breadcrumbs }) {
       </Breadcrumbs>
       {children}
       <div>
-        <ClerkLoaded>
+        {authed !== false && <ClerkLoaded>
           <UserButton signInUrl="/sign-in" signUpUrl="/sign-up" userProfileMode="modal" afterSignOutUrl="/" appearance={dark} />
-        </ClerkLoaded>
+        </ClerkLoaded>}
       </div>
 
     </nav>
@@ -147,6 +147,98 @@ function FileTree ({ language }) {
 
 }
 
+function Preview ({ previewUrl, language, output, identifier, runId, runStatus }) {
+  return (
+    <div style={{
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between'
+    }}>
+      {previewUrl &&
+        <div style={{
+          height: '32px',
+          minHeight: '32px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '4px',
+          gap: '4px',
+          boxSizing: 'border-box',
+          userSelect: 'none',
+        }}>
+          <input value={previewUrl} readOnly style={{
+            display: 'flex',
+            flexGrow: '1',
+            background: 'transparent',
+            padding: '4px',
+            boxSizing: 'border-box',
+            height: '100%',
+            border: '1px solid #222',
+            borderRadius: '4px',
+          }} />
+          <Button height={"24px"} icon={<ExternalLink />} width={"24px"} onClick={() => {
+            window.open(previewUrl, '_blank');
+          }}></Button>
+        </div>
+      }
+
+      {language.runtime &&
+        <pre style={{
+          flexGrow: '1',
+          margin: '0px',
+          borderRadius: '0px',
+          whiteSpace: 'pre-wrap'
+        }} className="code-output">{output}</pre>
+      }
+
+      {language.customRuntime && (() => {
+        const CustomRuntime = language.customRuntime;
+        return (
+          <CustomRuntime style={{
+            flexGrow: '1',
+            margin: '0px',
+            borderRadius: '0px',
+            whiteSpace: 'pre-wrap'
+          }} code={output} url={`https://${identifier}.vaquero.dev?nocache=${runId}`} />
+        )
+      })()}
+
+      <div style={{
+        height: '32px',
+        minHeight: '32px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '0px 8px',
+        userSelect: 'none',
+      }}>
+        <Dot type={runStatus.type} className="geist-dot">{runStatus.name}</Dot>
+        <div style={{
+          height: '100%',
+          lineHeight: '0px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '4px'
+        }}>
+          <div style={{
+            height: '100%',
+            padding: '4px',
+            boxSizing: 'border-box'
+          }}>
+            <img style={{
+              height: '100%',
+              borderRadius: '4px',
+            }} src={language.icon ?? ("https://cdn.jsdelivr.net/gh/devicons/devicon/icons/" + language.editor + "/" + language.editor + "-original.svg")} />
+          </div>
+          {language.name}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function Editor({ identifier, rename, previewUrl, editable, explicitSave, load, save, showLanguageSwitcher = false, editorName }) {
   const [finishedLoadingAt, setFinishedLoadingAt] = useState(null);
   const loading = !finishedLoadingAt;
@@ -183,7 +275,7 @@ export default function Editor({ identifier, rename, previewUrl, editable, expli
   }, []);
 
   useEffect(() => {
-    if (finishedLoadingAt && finishedLoadingAt < Date.now() - 500) save({
+    if (editable && finishedLoadingAt && finishedLoadingAt < Date.now() - 500) save({
       language: languageString,
       code
     });
@@ -287,7 +379,7 @@ export default function Editor({ identifier, rename, previewUrl, editable, expli
       `}</style>
       <Navbar breadcrumbs={[
         <Breadcrumbs.Item href={currentLink}>{editorName}</Breadcrumbs.Item>
-      ]}>
+      ]} authed={editable}>
         <div style={{
           display: 'flex',
           gap: '10px'
@@ -330,7 +422,7 @@ export default function Editor({ identifier, rename, previewUrl, editable, expli
               ))}
             </Select>
           }
-          {explicitSave && <Button onClick={() => explicitSave({ code, language })} type="secondary" color="#00db75">Save</Button>}
+          {explicitSave && <Button disabled={!editable} onClick={() => explicitSave({ code, language })} type="secondary" color="#00db75">Save</Button>}
 
         </div>
       </Navbar>
@@ -367,7 +459,7 @@ export default function Editor({ identifier, rename, previewUrl, editable, expli
         }} onKeyPress={e => {
           const shouldRun = e.key == "Enter" && e.shiftKey;
           if (shouldRun) {
-            save({
+            if (editable) save({
               language: languageString,
               code
             });
@@ -389,99 +481,13 @@ export default function Editor({ identifier, rename, previewUrl, editable, expli
           }}
           gutterSize={8}
           snapOffset={0}
-          minSize={[400, 50]}
+          minSize={editable ? [400, 50] : [400]}
           direction="vertical"
         >
 
-          <div style={{
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between'
-          }}>
-            {previewUrl &&
-              <div style={{
-                height: '32px',
-                minHeight: '32px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '4px',
-                gap: '4px',
-                boxSizing: 'border-box',
-                userSelect: 'none',
-              }}>
-                <input value={previewUrl} readOnly style={{
-                  display: 'flex',
-                  flexGrow: '1',
-                  background: 'transparent',
-                  padding: '4px',
-                  boxSizing: 'border-box',
-                  height: '100%',
-                  border: '1px solid #222',
-                  borderRadius: '4px',
-                }} />
-                <Button height={"24px"} icon={<ExternalLink />} width={"24px"} onClick={() => {
-                  window.open(previewUrl, '_blank');
-                }}></Button>
-              </div>
-            }
+          <Preview previewUrl={previewUrl} language={language} output={output} identifier={identifier} runId={runId} runStatus={runStatus} />
 
-            {language.runtime &&
-              <pre style={{
-                flexGrow: '1',
-                margin: '0px',
-                borderRadius: '0px',
-                whiteSpace: 'pre-wrap'
-              }} className="code-output">{output}</pre>
-            }
-
-            {language.customRuntime && (() => {
-              const CustomRuntime = language.customRuntime;
-              return (
-                <CustomRuntime style={{
-                  flexGrow: '1',
-                  margin: '0px',
-                  borderRadius: '0px',
-                  whiteSpace: 'pre-wrap'
-                }} code={output} url={`https://${identifier}.vaquero.dev?nocache=${runId}`} />
-              )
-            })()}
-
-            <div style={{
-              height: '32px',
-              minHeight: '32px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              padding: '0px 8px',
-              userSelect: 'none',
-            }}>
-              <Dot type={runStatus.type} className="geist-dot">{runStatus.name}</Dot>
-              <div style={{
-                height: '100%',
-                lineHeight: '0px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '4px'
-              }}>
-                <div style={{
-                  height: '100%',
-                  padding: '4px',
-                  boxSizing: 'border-box'
-                }}>
-                  <img style={{
-                    height: '100%',
-                    borderRadius: '4px',
-                  }} src={language.icon ?? ("https://cdn.jsdelivr.net/gh/devicons/devicon/icons/" + language.editor + "/" + language.editor + "-original.svg")} />
-                </div>
-                {language.name}
-              </div>
-            </div>
-          </div>
-
-          <div style={{
+          {editable && <div style={{
             display: "flex"
           }}>
             {language.resources ? <iframe src={language.resources} style={{
@@ -491,7 +497,7 @@ export default function Editor({ identifier, rename, previewUrl, editable, expli
               <Text h3>Resources</Text>
               <Text>Unfortunately, there are no resources available for this language yet.</Text>
             </>}
-          </div>
+          </div>}
 
 
         </Split>
