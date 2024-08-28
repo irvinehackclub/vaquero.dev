@@ -1,6 +1,7 @@
 import Editor from "@/components/Editor"
 import prisma from "@/lib/prisma";
 import { ClerkLoaded } from "@clerk/nextjs";
+import { getAuth } from "@clerk/nextjs/server";
 import { useState } from "react";
 
 export default function Edit ({ project: { id, name, language, files, fileId, identifier } }) {
@@ -46,13 +47,16 @@ export default function Edit ({ project: { id, name, language, files, fileId, id
 }
 
 export const getServerSideProps = async ({ req, params }) => {
-    const name = req.url.split('/').reverse()[0]
+    const auth = getAuth(req);
 
-    console.log({ name, params })
+    const name = req.url.split('/').reverse()[0];
+
+    console.log({ name, params, auth });
 
     const project = await prisma.project.findUnique({
         where: {
-            identifier: name
+            identifier: name,
+            ownerId: auth.userId
         },
         include: {
             files: true

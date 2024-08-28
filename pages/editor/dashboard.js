@@ -2,7 +2,7 @@ import { getAuth, clerkClient } from "@clerk/nextjs/server";
 import Inter from '@/components/Inter'
 import { ClerkLoaded, UserButton } from '@clerk/nextjs'
 import { Breadcrumbs, Modal, Button, Card, Divider, Dot, Drawer, Fieldset, Grid, Input, Page, Select, Text, useToasts } from '@geist-ui/core'
-import { Inbox, Home as HomeIcon, PlusCircle } from '@geist-ui/icons'
+import { Inbox, Home as HomeIcon, PlusCircle, FilePlus, UserPlus } from '@geist-ui/icons'
 import Head from 'next/head'
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
@@ -112,8 +112,110 @@ function Projects({ projects, drawerState, setDrawerState, projectName, setProje
                 <Grid xs={24} sm={12} md={8} lg={6} xl={4}>
                     <Card hoverable style={{ width: '100%', border: '1px solid #343434' }} className="project-card" onClick={() => setDrawerState(true)}>
                         <Card.Content style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 10, margin: '0px', height: '100%' }}>
-                            <PlusCircle size={32} />
+                            <FilePlus size={32} />
                             <Text margin={0}>Create Project</Text>
+                        </Card.Content>
+                    </Card>
+                </Grid>
+            </Grid.Container>
+        </>
+    )
+}
+
+function Groups({ groups, drawerState, setDrawerState }) {
+    const [category, setCategory] = useState("");
+    const [type, setType] = useState("Join");
+
+    const formRef = useRef(null);
+
+
+    return (
+        <>
+
+            <Drawer visible={drawerState} onClose={() => setDrawerState(false)} placement="right" style={{
+                textAlign: 'left',
+                maxWidth: '600px',
+                width: 'calc(100vw - 64px)'
+            }}>
+                <h2 style={{ marginBottom: '0px' }}>Coding is better together.</h2>
+                <p style={{ marginTop: '16px' }}>Join or create a group to share your projects with each other.</p>
+                <Drawer.Content>
+                    <form onSubmit={event => {
+                        event.preventDefault();
+                        return false;
+                    }} action="/api/projects/new" method="POST" ref={formRef}>
+                        <Fieldset.Group value={type} onChange={setType}>
+                            <Fieldset label="Join">
+                                <Fieldset.Title>Join a group</Fieldset.Title>
+                                <Fieldset.Subtitle style={{ marginBottom: '16px' }}>Join a club or a class to share or submit projects.</Fieldset.Subtitle>
+
+                                <Input name="groupCode" placeholder="_ _ _ _ _ _">
+                                    Group Code
+                                </Input>
+
+                                <Fieldset.Footer>
+                                    {/* After joining, you'll be able to share projects with the group */}
+                                    Joining groups is currently disabled
+                                    <Button disabled onClick={() => formRef.current.submit()} auto scale={1 / 3} font="12px" type="success">Create</Button>
+                                </Fieldset.Footer>
+                            </Fieldset>
+                            <Fieldset label="Create">
+                                <Fieldset.Title>Create a group</Fieldset.Title>
+                                <Fieldset.Subtitle style={{ marginBottom: '16px' }}>Create a space for students to share projects.</Fieldset.Subtitle>
+
+                                <Input name="groupName" placeholder="My Coding Club">
+                                    Group Name
+                                </Input>
+                                <br /><br />
+                                <label style={{ marginBottom: '0.5em', display: 'inline-block' }}>
+                                    <Text small style={{ color: '#999999' }}>
+                                        Type
+                                    </Text>
+                                </label>
+                                <br />
+
+                                <Select value={category} onChange={setCategory}>
+                                    <Select.Option value={"club"}>Club</Select.Option>
+                                    <Select.Option value={"class"}>Class</Select.Option>
+                                    <Select.Option value={"other"}>Other</Select.Option>
+                                </Select>
+
+                                <span style={{ display: 'none' }}>
+                                    <Input hidden style={{ display: 'none' }} name="terminalLanguage" value={"s"} />
+                                </span>
+
+                                <Fieldset.Footer>
+                                    {/* After creating, you'll be able to give participants a join code */}
+                                    Creating groups is currently disabled
+                                    <Button disabled onClick={() => formRef.current.submit()} auto scale={1 / 3} font="12px" type="success">Create</Button>
+                                </Fieldset.Footer>
+                            </Fieldset>
+                        </Fieldset.Group>
+                        <span style={{ display: 'none' }}>
+                            <Input hidden name="type" value={type} />
+                        </span>
+
+                    </form>
+
+                </Drawer.Content>
+            </Drawer>
+
+            <Grid.Container gap={3} className="projects">
+                {groups.map(group => (
+                    <Grid xs={24} sm={12} md={8} lg={6} xl={4}>
+                        <a style={{ width: '100%' }} href={group.url}>
+                            <Card hoverable style={{ width: '100%', border: '1px solid #343434' }} className="project-card">
+                                <Fieldset.Title>{group.title}</Fieldset.Title>
+                                <Fieldset.Subtitle>{languages[group.language].name}</Fieldset.Subtitle>
+                            </Card>
+                        </a>
+                    </Grid>
+                ))}
+                <Grid xs={24} sm={12} md={8} lg={6} xl={4}>
+                    <Card hoverable style={{ width: '100%', border: '1px solid #343434' }} className="project-card" onClick={() => setDrawerState(true)}>
+                        <Card.Content style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 10, margin: '0px', height: '100%' }}>
+                            <UserPlus size={32} />
+                            <Text margin={0}>Join Group</Text>
                         </Card.Content>
                     </Card>
                 </Grid>
@@ -124,6 +226,7 @@ function Projects({ projects, drawerState, setDrawerState, projectName, setProje
 
 export default function Home({ projects, user }) {
     const [drawerState, setDrawerState] = useState(false);
+    const [groupsDrawerState, setGroupsDrawerState] = useState(false);
     const [projectName, setProjectName] = useState("");
     const router = useRouter();
     const toasts = useToasts();
@@ -198,10 +301,10 @@ export default function Home({ projects, user }) {
                     </Card>
                 </a> */}
 
-                <Card hoverable style={{ width: '100%', border: '1px solid #343434' }} className="project-card" mb={2} onClick={() => setAttendance(true)}>
+                {/* <Card hoverable style={{ width: '100%', border: '1px solid #343434' }} className="project-card" mb={2} onClick={() => setAttendance(true)}>
                     <Fieldset.Title>Meeting Check-In <span style={{ fontFamily: "Inter" }}>{' '}&nbsp;→</span></Fieldset.Title>
                     <Fieldset.Subtitle>Log your attendance for an Irvine Hack Club meeting</Fieldset.Subtitle>
-                </Card>
+                </Card> */}
 
                 <Modal visible={attendance} onClose={() => setAttendance(false)}>
                     <Modal.Title>Check-In</Modal.Title>
@@ -216,8 +319,21 @@ export default function Home({ projects, user }) {
                     <Modal.Action>Submit</Modal.Action>
                 </Modal>
 
-                <h3>Your Projects</h3>
+                <h3>Projects</h3>
                 <Projects projects={projects} drawerState={drawerState} setDrawerState={setDrawerState} />
+                
+                <h3 style={{
+                    marginTop: "2rem"
+                }}>Groups</h3>
+                <p>You aren't in any groups yet. Create or join a group to get started.</p>
+
+                <Groups groups={[]} drawerState={groupsDrawerState} setDrawerState={setGroupsDrawerState} />
+
+                {/* <h3 style={{
+                    marginTop: "2rem"
+                }}>Admin</h3>
+                <p>Manage the operation of vaquero.dev</p> */}
+
             </Page>
         </Inter>
     )
