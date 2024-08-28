@@ -4,9 +4,7 @@ import { ClerkLoaded } from "@clerk/nextjs";
 import { getAuth } from "@clerk/nextjs/server";
 import { Page } from "@geist-ui/core";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { useState } from "react";
-import { useEffect } from "react/cjs/react.production.min";
 
 export default function Edit ({ project }) {
     if (!project) return (
@@ -17,24 +15,10 @@ export default function Edit ({ project }) {
     )
 
     const { id, name, language, files, fileId, identifier, editable } = project;
-
-    if (!project.editable) {
-        const router = useRouter();
-
-        useEffect(() => {
-            router?.replace(`/view/${identifier}`);
-        }, [router]);
-
-        return (
-            <></>
-        )
-    }
-
     const [upToDateIdentifier, setUpToDateIdentifier] = useState(identifier);
 
     return (
-        <ClerkLoaded>
-            <Editor load={async () => {
+            <Editor editable={false} load={async () => {
                 return {
                     language,
                     code: files[0].content
@@ -67,7 +51,6 @@ export default function Edit ({ project }) {
                 }
                 return success;
             }} editorName={name} previewUrl={language == 'html' ? `https://${upToDateIdentifier}.vaquero.dev` : ''} />
-        </ClerkLoaded>
     )
 }
 
