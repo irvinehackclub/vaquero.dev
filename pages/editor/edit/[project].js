@@ -5,8 +5,7 @@ import { getAuth } from "@clerk/nextjs/server";
 import { Page } from "@geist-ui/core";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
-import { useEffect } from "react/cjs/react.production.min";
+import { useState, useEffect } from "react";
 
 export default function Edit ({ project }) {
     if (!project) return (
