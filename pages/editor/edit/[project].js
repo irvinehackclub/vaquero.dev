@@ -2,14 +2,24 @@ import Editor from "@/components/Editor"
 import prisma from "@/lib/prisma";
 import { ClerkLoaded } from "@clerk/nextjs";
 import { getAuth } from "@clerk/nextjs/server";
+import { Page } from "@geist-ui/core";
+import Link from "next/link";
 import { useState } from "react";
 
-export default function Edit ({ project: { id, name, language, files, fileId, identifier } }) {
+export default function Edit ({ project }) {
+    if (!project) return (
+        <Page>
+            <h2>We couldn't find that project!</h2>
+            <p>Try visiting the <Link href="/dashboard">Dashboard</Link> to see all of your projects.</p>
+        </Page>
+    )
+
+    const { id, name, language, files, fileId, identifier, editable } = project;
     const [upToDateIdentifier, setUpToDateIdentifier] = useState(identifier);
 
     return (
         <ClerkLoaded>
-            <Editor load={async () => {
+            <Editor editable={editable} load={async () => {
                 return {
                     language,
                     code: files[0].content
@@ -56,23 +66,26 @@ export const getServerSideProps = async ({ req, params }) => {
     const project = await prisma.project.findUnique({
         where: {
             identifier: name,
-            ownerId: auth.userId
+            // ownerId: auth.userId
         },
         include: {
             files: true
         }
     });
 
+    const editable = project.ownerId == auth?.userId;
+
     return {
         props: {
-            project: {
+            project: project ? {
                 name: project.name,
                 language: project.language,
                 files: project.files,
                 id: project.id,
                 fileId: project.files[0].id,
-                identifier: project.identifier
-            }
+                identifier: project.identifier,
+                editable
+            } : null
         }
     }
 }

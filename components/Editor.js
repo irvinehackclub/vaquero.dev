@@ -46,7 +46,7 @@ export function Navbar({ children, breadcrumbs }) {
   )
 }
 
-export function Code({ value, defaultValue, onChange, language = 'javascript' }) {
+export function Code({ value, defaultValue, onChange, language = 'javascript', editable }) {
   const editorRef = useRef(null);
   const monaco = useMonaco();
   useEffect(() => {
@@ -80,7 +80,8 @@ export function Code({ value, defaultValue, onChange, language = 'javascript' })
           wordWrap: 'on',
           fontLigatures: true,
           formatOnPaste: true,
-          lineNumbersMinChars: 4
+          lineNumbersMinChars: 4,
+          readOnly: !editable
         }}
         value={value}
         defaultValue={defaultValue}
@@ -146,7 +147,7 @@ function FileTree ({ language }) {
 
 }
 
-export default function Editor({ identifier, rename, previewUrl, explicitSave, load, save, showLanguageSwitcher = false, editorName }) {
+export default function Editor({ identifier, rename, previewUrl, editable, explicitSave, load, save, showLanguageSwitcher = false, editorName }) {
   const [finishedLoadingAt, setFinishedLoadingAt] = useState(null);
   const loading = !finishedLoadingAt;
 
@@ -303,10 +304,10 @@ export default function Editor({ identifier, rename, previewUrl, explicitSave, l
                   <Input width="100%" labelRight=".vaquero.dev" mb={1} placeholder="Project Name" value={newIdentifier} onChange={e => setNewIdentifier(e.target.value.toLowerCase().split(' ').join('_').split('').filter(char => char.match(/[a-z0-9_]/)).join(''))}>
                     Project URL
                   </Input>
-                  <Text small type="secondary" mt={2} style={{ display: "block" }}>Hack Club Boba Drops</Text>
+                  {/* <Text small type="secondary" mt={2} style={{ display: "block" }}>Hack Club Boba Drops</Text>
                   <a href={`https://hack.club/ihs-boba-submit?website=${encodeURIComponent(identifier)}`} target="_blank">
                     <Button type="success" mt={1 / 2}>Submit Website</Button>
-                  </a>
+                  </a> */}
                 </Modal.Content>
                 <Modal.Action passive onClick={() => setRenameModal(false)}>Cancel</Modal.Action>
                 <Modal.Action onClick={async () => {
@@ -374,7 +375,7 @@ export default function Editor({ identifier, rename, previewUrl, explicitSave, l
             e.preventDefault();
           }
         }}>
-          <Code value={code} onChange={value => {
+          <Code value={code} editable={editable} onChange={value => {
             setCode(value);
           }} language={language.editor} />
 
