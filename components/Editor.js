@@ -1,8 +1,8 @@
 import { dark, neobrutalism } from "@clerk/themes";
 import Inter from '@/components/Inter'
-import { ClerkLoaded, UserButton } from '@clerk/nextjs'
-import { Breadcrumbs, Button, ButtonDropdown, Dot, Input, Modal, Page, Select, Spacer, Text, Tree, useToasts } from '@geist-ui/core'
-import { Inbox, Home as HomeIcon, ExternalLink, Edit, Edit2, Edit3, Settings } from '@geist-ui/icons'
+import { ClerkLoaded, SignInButton, useClerk, UserButton } from '@clerk/nextjs'
+import { Breadcrumbs, Button, ButtonDropdown, Dot, Input, Modal, Page, Select, Spacer, Text, Tooltip, Tree, useToasts } from '@geist-ui/core'
+import { Inbox, Home as HomeIcon, ExternalLink, Edit, Edit2, Edit3, Settings, Box } from '@geist-ui/icons'
 import Head from 'next/head'
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
@@ -14,8 +14,15 @@ import { languages } from "@/lib/languages";
 import useInterval from "@/hooks/useInterval";
 import { useDebounce } from 'usehooks-ts'
 import GitHubDark from "@/lib/themes/GitHubDark";
+import { useRouter } from "next/router";
 
 export function Navbar({ children, breadcrumbs, authed }) {
+  const clerk = useClerk();
+  const [page, setPage] = useState(null);
+  useEffect(() => {
+    setPage(new URL(window.location.href).pathname)
+  }, []);
+
   return (
     <nav style={{
       width: '100%',
@@ -24,22 +31,24 @@ export function Navbar({ children, breadcrumbs, authed }) {
       alignItems: 'center',
       justifyContent: 'space-between',
       boxSizing: 'border-box',
-      padding: '0px 32px',
+      padding: '0px 14px',
       background: '#000',
       boxShadow: 'inset 0 -1px 0 0 hsla(0,0%,100%,.1)'
     }}>
 
       <Breadcrumbs>
-        <Breadcrumbs.Item href="/dashboard"><HomeIcon /></Breadcrumbs.Item>
+        <Breadcrumbs.Item href="/dashboard"><Box /></Breadcrumbs.Item>
         {breadcrumbs}
         {/* <Breadcrumbs.Item href=""><Inbox /> Inbox</Breadcrumbs.Item>
         <Breadcrumbs.Item>Page</Breadcrumbs.Item> */}
       </Breadcrumbs>
       {children}
       <div>
-        {authed !== false && <ClerkLoaded>
-          <UserButton signInUrl="/sign-in" signUpUrl="/sign-up" userProfileMode="modal" afterSignOutUrl="/" appearance={dark} />
-        </ClerkLoaded>}
+        {clerk.client && (clerk.user ? <ClerkLoaded>
+          <UserButton signInUrl="/sign-in" signUpUrl="/sign-up" userProfileMode="modal" appearance={dark} />
+        </ClerkLoaded> :
+          <Button type="secondary" onClick={() => clerk.openSignIn({ redirectUrl: page })}>Sign In</Button>
+          )}
       </div>
 
     </nav>
@@ -239,7 +248,7 @@ function Preview ({ previewUrl, language, output, identifier, runId, runStatus }
   )
 }
 
-export default function Editor({ identifier, rename, previewUrl, editable, explicitSave, load, save, showLanguageSwitcher = false, editorName }) {
+export default function Editor({ identifier, rename, previewUrl, editable, explicitSave, load, save, showLanguageSwitcher = false, editorName, userName }) {
   const [finishedLoadingAt, setFinishedLoadingAt] = useState(null);
   const loading = !finishedLoadingAt;
 
@@ -364,6 +373,8 @@ export default function Editor({ identifier, rename, previewUrl, editable, expli
     setCurrentLink(window.location.href);
   }, []);
 
+  const clerk = useClerk();
+
   return (
     <Inter>
       <Head>
@@ -378,6 +389,7 @@ export default function Editor({ identifier, rename, previewUrl, editable, expli
         }
       `}</style>
       <Navbar breadcrumbs={[
+        userName ? <Breadcrumbs.Item>{userName}</Breadcrumbs.Item> : null,
         <Breadcrumbs.Item href={currentLink}>{editorName}</Breadcrumbs.Item>
       ]} authed={editable}>
         <div style={{
@@ -415,6 +427,11 @@ export default function Editor({ identifier, rename, previewUrl, editable, expli
             </>
           )}
           <Button onClick={run} loading={running || loading} disabled={running || loading} type="success" color="#00db75" className={"run-button" + (running ? " run-button-running" : "")}>Run</Button>
+          
+          <Tooltip placement="bottom" text="Forking projects is coming soon">
+            <Button disabled type="success-light">Fork</Button>
+          </Tooltip>
+
           {showLanguageSwitcher &&
             <Select style={{ height: '40px' }} value={languageString} disabled={running || loading} onChange={setLanguageString}>
               {Object.entries(languages).map(([language, { name }]) => (
@@ -467,9 +484,9 @@ export default function Editor({ identifier, rename, previewUrl, editable, expli
             e.preventDefault();
           }
         }}>
-          <Code value={code} editable={editable} onChange={value => {
+          {clerk.loaded && <Code value={code} editable={editable} onChange={value => {
             setCode(value);
-          }} language={language.editor} />
+          }} language={language.editor} />}
 
         </div>
 

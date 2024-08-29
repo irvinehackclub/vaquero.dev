@@ -1,6 +1,6 @@
 import Editor from "@/components/Editor"
 import prisma from "@/lib/prisma";
-import { ClerkLoaded } from "@clerk/nextjs";
+import { clerkClient, ClerkLoaded } from "@clerk/nextjs";
 import { getAuth } from "@clerk/nextjs/server";
 import { Page } from "@geist-ui/core";
 import Link from "next/link";
@@ -17,57 +17,47 @@ export default function Edit ({ project }) {
 
     const { id, name, language, files, fileId, identifier, editable } = project;
 
-    if (!project.editable) {
-        const router = useRouter();
-
-        useEffect(() => {
-            router?.replace(`/view/${identifier}`);
-        }, [router]);
-
-        return (
-            <></>
-        )
-    }
-
     const [upToDateIdentifier, setUpToDateIdentifier] = useState(identifier);
 
-    return (
-        <ClerkLoaded>
-            <Editor editable load={async () => {
-                return {
-                    language,
-                    code: files[0].content
-                }
-            }} save={async ({ code, language }) => {
-                console.log('actually saving')
-                fetch("/api/projects/saveFile", {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        id: fileId,
-                        code
-                    })
-                });
-            }} identifier={identifier} rename={async newName => {
-                const { success } = await fetch("/api/projects/changeIdentifier", {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        oldIdentifier: upToDateIdentifier,
-                        newIdentifier: newName
-                    })
-                }).then(res => res.json());
-                if (success) {
-                    setUpToDateIdentifier(newName);
-                }
-                return success;
-            }} editorName={name} previewUrl={language == 'html' ? `https://${upToDateIdentifier}.vaquero.dev` : ''} />
-        </ClerkLoaded>
-    )
+    const editor = (
+        <Editor editable={editable} load={async () => {
+            return {
+                language,
+                code: files[0].content
+            }
+        }} save={async ({ code, language }) => {
+            console.log('actually saving')
+            fetch("/api/projects/saveFile", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    id: fileId,
+                    code
+                })
+            });
+        }} identifier={identifier} rename={async newName => {
+            const { success } = await fetch("/api/projects/changeIdentifier", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    oldIdentifier: upToDateIdentifier,
+                    newIdentifier: newName
+                })
+            }).then(res => res.json());
+            if (success) {
+                setUpToDateIdentifier(newName);
+            }
+            return success;
+        }} editorName={name} previewUrl={language == 'html' ? `https://${upToDateIdentifier}.vaquero.dev` : ''} />
+    );
+
+    return editable ? (
+        <ClerkLoaded>{editor}</ClerkLoaded>
+    ) : editor;
 }
 
 export const getServerSideProps = async ({ req, params }) => {
@@ -87,6 +77,15 @@ export const getServerSideProps = async ({ req, params }) => {
         }
     });
 
+    let userName = "";
+    try {
+        const user = await clerkClient.users.getUser(project.ownerId);
+        console.log(user);
+        userName = user.username || user.firstName || "";
+    } catch (err) {
+        console.error(err);
+    }
+
     const editable = project.ownerId == auth?.userId;
 
     return {
@@ -98,7 +97,8 @@ export const getServerSideProps = async ({ req, params }) => {
                 id: project.id,
                 fileId: project.files[0].id,
                 identifier: project.identifier,
-                editable
+                editable,
+                userName
             } : null
         }
     }

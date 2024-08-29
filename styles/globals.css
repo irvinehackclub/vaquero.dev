@@ -145,3 +145,7 @@ span.dot.geist-dot > span.label {
     }
   }
   
+
+  div:has(> a[aria-label="Clerk logo"]) {
+    display: none;
+  }

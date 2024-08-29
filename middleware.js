@@ -60,7 +60,7 @@ export default function middleware (request) {
     if (scope == 'internal' && host.site == 'editor') {
         return authMiddleware({
             debug: true,
-            publicRoutes: ['/api/code/api/v2/piston/runtimes', '/api/code/api/v2/piston/execute', '/playground', '/', '/sign-in', '/sign-up', '/sign-out', '/sign-in/[[...index]]', '/sign-up/[[...index]]', '/sign-out/[[...index]]', '/sign-in/sso-callback', '/sign-up/sso-callback', '/sign-up/continue', '/about', '/view/:project'],
+            publicRoutes: ['/api/code/api/v2/piston/runtimes', '/api/code/api/v2/piston/execute', '/playground', '/', '/sign-in', '/sign-up', '/sign-out', '/sign-in/[[...index]]', '/sign-up/[[...index]]', '/sign-out/[[...index]]', '/sign-in/sso-callback', '/sign-up/sso-callback', '/sign-up/continue', '/about', '/edit/:project'],
             beforeAuth() {
 
             },
