@@ -1,6 +1,6 @@
 export default async function execute (req, res) {
     console.log("INPUT:" + req.body);
-    const output = await fetch('https://emkc.org/api/v2/piston/execute', {
+    const output = await fetch('https://piston.ian.hackclub.app/api/v2/piston/execute', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

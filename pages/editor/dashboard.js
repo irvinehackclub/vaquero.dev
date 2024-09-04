@@ -1,7 +1,7 @@
 import { getAuth, clerkClient } from "@clerk/nextjs/server";
 import Inter from '@/components/Inter'
 import { ClerkLoaded, UserButton } from '@clerk/nextjs'
-import { Breadcrumbs, Modal, Button, Card, Divider, Dot, Drawer, Fieldset, Grid, Input, Page, Select, Text, useToasts } from '@geist-ui/core'
+import { Breadcrumbs, Modal, Button, Card, Divider, Dot, Drawer, Fieldset, Grid, Input, Page, Select, Text, useToasts, Code } from '@geist-ui/core'
 import { Inbox, Home as HomeIcon, PlusCircle, FilePlus, UserPlus } from '@geist-ui/icons'
 import Head from 'next/head'
 import Image from 'next/image'
@@ -103,8 +103,18 @@ function Projects({ projects, drawerState, setDrawerState, projectName, setProje
                     <Grid xs={24} sm={12} md={8} lg={6} xl={4}>
                         <a style={{ width: '100%' }} href={project.url}>
                             <Card hoverable style={{ width: '100%', border: '1px solid #343434' }} className="project-card">
-                                <Fieldset.Title>{project.title}</Fieldset.Title>
-                                <Fieldset.Subtitle>{languages[project.language].name}</Fieldset.Subtitle>
+                                <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", width: "100%" }}>
+                                    <Fieldset.Title style={{
+                                        flexGrow: "1",
+                                        width: "100%"
+                                    }}>{project.title}</Fieldset.Title>
+                                    <img src={languages[project.language].icon} style={{
+                                        maxHeight: "24px",
+                                        width: "24px",
+                                        objectFit: "contain"
+                                    }} />
+                                </div>
+                                <Fieldset.Subtitle><Code>{project.identifier}</Code></Fieldset.Subtitle>
                             </Card>
                         </a>
                     </Grid>
@@ -356,7 +366,8 @@ export const getServerSideProps = async ({ req }) => {
             projects: projects.map(project => ({
                 title: project.name,
                 language: project.language,
-                url: '/edit/' + project.identifier
+                url: '/edit/' + project.identifier,
+                identifier: project.identifier
             })),
             user: {
                 email: user.externalAccounts[0]?.emailAddress,

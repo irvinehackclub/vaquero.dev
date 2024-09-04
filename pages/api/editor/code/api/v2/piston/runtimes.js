@@ -1,5 +1,5 @@
 export default async function runtimes (req, res) {
-    const output = await fetch('https://emkc.org/api/v2/piston/runtimes', {
+    const output = await fetch('https://piston.ian.hackclub.app/api/v2/piston/runtimes', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
