@@ -329,6 +329,7 @@ export default function Editor({ identifier, rename, previewUrl, editable, expli
         new CodeExec.File(language.entryPoint, code)
       );
     } catch (err) {
+      console.error(err);
       const elapsed = Date.now() - start;
       const time = elapsed >= 1000 ? `${Math.round(elapsed * 10) / 100}s` : `${elapsed}ms`;
 
