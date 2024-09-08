@@ -1,3 +1,4 @@
+import { languages } from "@/lib/languages";
 import prisma from "@/lib/prisma";
 import { generate } from "@/lib/projectIds";
 import { setCookie } from 'cookies-next';
