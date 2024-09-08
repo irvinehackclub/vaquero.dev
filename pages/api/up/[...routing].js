@@ -29,7 +29,7 @@ export default async function handler (req, res) {
             new CodeExec.File(languages[obj.language].entryPoint, obj.files[0].content)
         )
     
-        res.json(result.output);
+        res.send(result.output);
 
     } catch (err) {
         console.error(err);
