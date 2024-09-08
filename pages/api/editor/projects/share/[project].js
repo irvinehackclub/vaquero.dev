@@ -1,4 +1,6 @@
+import { languages } from "@/lib/languages";
 import prisma from "@/lib/prisma";
+import CodeExec from "code-exec";
 
 export default async function handler (req, res) {
     const { project } = req.query;
@@ -17,5 +19,9 @@ export default async function handler (req, res) {
         return res.send(obj.files[0].content);
     }
 
-    res.json(obj);
+    const result = await CodeExec.with(languages[obj.language].runtime, "editor.vaquero.dev/api/code").run(
+        new CodeExec.File(languages[obj.language].entryPoint, obj.files[0].content)
+    )
+
+    res.json(result);
 }

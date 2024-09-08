@@ -108,7 +108,7 @@ function FileTree ({ language }) {
   const blurHandler = e => e.target.blur();
   const files = [
     {
-      name: "Code Editor",
+      name: languages[language]?.entryPoint || "Code Editor",
       language
     }
   ]
@@ -197,7 +197,8 @@ function Preview ({ previewUrl, language, output, identifier, runId, runStatus }
           flexGrow: '1',
           margin: '0px',
           borderRadius: '0px',
-          whiteSpace: 'pre-wrap'
+          whiteSpace: 'pre-wrap',
+          wordWrap: "anywhere",
         }} className="code-output">{output}</pre>
       }
 
@@ -347,7 +348,7 @@ export default function Editor({ identifier, rename, previewUrl, editable, expli
 
     setOutput(result.output);
 
-    if (result.code !== 0) {
+    if (result.code) {
       setRunStatus({
         type: "error",
         name: `Errored after ${time}`
@@ -499,7 +500,7 @@ export default function Editor({ identifier, rename, previewUrl, editable, expli
           }}
           gutterSize={8}
           snapOffset={0}
-          minSize={editable ? [400, 50] : [400]}
+          minSize={editable ? [400, 54] : [400]}
           direction="vertical"
         >
 
@@ -511,10 +512,10 @@ export default function Editor({ identifier, rename, previewUrl, editable, expli
             {language.resources ? <iframe src={language.resources} style={{
               border: "none",
               width: "100%"
-            }}></iframe> : <>
+            }}></iframe> : <div style={{ padding: "8px", width: "100%", overflow: "auto" }}>
               <Text h3>Resources</Text>
-              <Text>Unfortunately, there are no resources available for this language yet.</Text>
-            </>}
+              <Text>There are no resources available for {language.name} yet. Try searching online or reading the documentation if you need help.</Text>
+            </div>}
           </div>}
 
 

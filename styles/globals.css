@@ -100,27 +100,27 @@ span.dot.geist-dot > span.label {
   }
   
   /* Webkit browsers (Chrome, Safari) */
-  .code-output::-webkit-scrollbar {
+  pre.code-output::-webkit-scrollbar {
     width: 12px;
   }
   
-  .code-output::-webkit-scrollbar-track {
+  pre.code-output::-webkit-scrollbar-track {
     background-color: var(--scrollbar-track-color);
   }
   
-  .code-output::-webkit-scrollbar-thumb {
+  pre.code-output::-webkit-scrollbar-thumb {
     background-color: var(--scrollbar-thumb-color);
   }
   
   /* Mozilla Firefox */
   /* For Firefox 64 and below */
-  .code-output.scrollbar-moz-old {
+  pre.code-output.scrollbar-moz-old {
     scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
     scrollbar-width: auto;
   }
   
   /* For Firefox 65+ */
-  .code-output.scrollbar-moz-new {
+  pre.code-output.scrollbar-moz-new {
     scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
   }
   
@@ -128,19 +128,19 @@ span.dot.geist-dot > span.label {
   /* For IE 10+ and Edge 12+ */
   @supports (-ms-overflow-style: none) {
     /* IE and Edge scrollbar customization */
-    .code-output {
+    pre.code-output {
       -ms-overflow-style: none;
     }
   
-    .code-output::-webkit-scrollbar {
+    pre.code-output::-webkit-scrollbar {
       width: 12px;
     }
   
-    .code-output::-webkit-scrollbar-track {
+    pre.code-output::-webkit-scrollbar-track {
       background-color: var(--scrollbar-track-color);
     }
   
-    .code-output::-webkit-scrollbar-thumb {
+    pre.code-output::-webkit-scrollbar-thumb {
       background-color: var(--scrollbar-thumb-color);
     }
   }
@@ -148,4 +148,10 @@ span.dot.geist-dot > span.label {
 
   div:has(> a[aria-label="Clerk logo"]) {
     display: none;
+  }
+
+  .code-output {
+
+  scrollbar-color: #363636 #232323;
+  scrollbar-width: thin;
   }
