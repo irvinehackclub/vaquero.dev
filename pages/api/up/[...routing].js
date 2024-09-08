@@ -1,6 +1,7 @@
 import { languages } from "@/lib/languages";
 import prisma from "@/lib/prisma";
 import { generate } from "@/lib/projectIds";
+import CodeExec from "code-exec";
 import { setCookie } from 'cookies-next';
 
 export default async function handler (req, res) {
@@ -31,6 +32,7 @@ export default async function handler (req, res) {
         res.json(result);
 
     } catch (err) {
+        console.error(err);
         res.setHeader('Content-Type', 'text/html');
         return res.send(/*html*/`
             <!DOCTYPE html>
