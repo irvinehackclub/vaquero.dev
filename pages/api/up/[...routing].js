@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { generate } from "@/lib/projectIds";
 import CodeExec from "code-exec";
 import { setCookie } from 'cookies-next';
+import * as util from "util";
 
 export default async function handler (req, res) {
     const { routing: [project, ...route] } = req.query;
@@ -25,9 +26,17 @@ export default async function handler (req, res) {
             return res.send(obj.files[0].content);
         }
         
-        const result = await CodeExec.with(languages[obj.language].runtime, "editor.vaquero.dev/api/code").run(
+        const runtime = CodeExec.with(languages[obj.language].runtime, "editor.vaquero.dev/api/code");
+        runtime.stdin = JSON.stringify({
+            README: "Please read STDIN documentation at vaquero.dev/docs/stdin",
+            headers: req.headers,
+            url: req.url,
+            body: req.body
+        });
+        const result = await runtime.run(
             new CodeExec.File(languages[obj.language].entryPoint, obj.files[0].content)
         )
+        console.log(result)
     
         res.send(result.output);
 
