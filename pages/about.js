@@ -1,4 +1,5 @@
 import Inter from '@/components/Inter'
+import app from '@/lib/app'
 import { Button } from '@geist-ui/core'
 import Head from 'next/head'
 import Image from 'next/image'
