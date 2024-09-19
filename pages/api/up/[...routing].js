@@ -1,3 +1,4 @@
+import execute from "@/lib/execute";
 import { languages } from "@/lib/languages";
 import prisma from "@/lib/prisma";
 import { generate } from "@/lib/projectIds";
@@ -27,15 +28,22 @@ export default async function handler (req, res) {
         }
         
         const runtime = CodeExec.with(languages[obj.language].runtime, "editor.vaquero.dev/api/code");
+        const request = {
+            headers: req.headers,
+            method: req.method,
+            url: req.url,
+            body: req.body instanceof ReadableStream ? null : req.body
+        }
         runtime.stdin = JSON.stringify({
             README: "Please read STDIN documentation at vaquero.dev/docs/stdin",
-            headers: req.headers,
-            url: req.url,
-            body: req.body
+            ...request
         });
-        const result = await runtime.run(
-            new CodeExec.File(languages[obj.language].entryPoint, obj.files[0].content)
-        )
+        const result = await execute({
+            language: languages[obj.language],
+            code: obj.files[0].content, 
+            request,
+            source: "request"
+        });
         console.log(result)
     
         res.send(result.output);

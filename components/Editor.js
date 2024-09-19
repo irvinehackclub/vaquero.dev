@@ -16,6 +16,7 @@ import { useDebounce } from 'usehooks-ts'
 import GitHubDark from "@/lib/themes/GitHubDark";
 import { useRouter } from "next/router";
 import app from "@/lib/app";
+import execute from "@/lib/execute";
 
 export function Navbar({ children, breadcrumbs, authed }) {
   const clerk = useClerk();
@@ -327,9 +328,11 @@ export default function Editor({ identifier, rename, previewUrl, editable, expli
 
     let result;
     try {
-      result = await CodeExec.with(language.runtime, "editor.vaquero.dev/api/code").run(
-        new CodeExec.File(language.entryPoint, code)
-      );
+      result = await execute({
+        language,
+        code,
+        source: "editor"
+      });
     } catch (err) {
       console.error(err);
       const elapsed = Date.now() - start;
