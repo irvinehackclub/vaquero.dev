@@ -52,7 +52,7 @@ export default function Edit ({ project }) {
                 setUpToDateIdentifier(newName);
             }
             return success;
-        }} editorName={name} previewUrl={language == 'html' ? `https://${upToDateIdentifier}.vaquero.dev` : ''} />
+        }} editorName={name} previewUrl={`https://${upToDateIdentifier}.vaquero.dev`} />
     );
 
     return editable ? (
