@@ -339,7 +339,7 @@ export default function Editor({ identifier, rename, previewUrl, editable, expli
       const elapsed = Date.now() - start;
       const time = elapsed >= 1000 ? `${Math.round(elapsed * 10) / 100}s` : `${elapsed}ms`;
 
-      setOutput(`Failed due to an internal error after ${Date.now() - start}ms\n\n${err}`);
+      setOutput(`Failed due to an internal error after ${Date.now() - start}ms\n\n${err.stack}`);
       setRunStatus({
         type: "error",
         name: `Failed after ${time}`
