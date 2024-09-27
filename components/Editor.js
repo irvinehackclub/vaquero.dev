@@ -331,7 +331,8 @@ export default function Editor({ identifier, rename, previewUrl, editable, expli
       result = await execute({
         language,
         code,
-        source: "editor"
+        source: "editor",
+        project: identifier
       });
     } catch (err) {
       console.error(err);

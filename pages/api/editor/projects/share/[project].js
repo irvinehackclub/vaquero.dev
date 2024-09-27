@@ -23,7 +23,8 @@ export default async function handler (req, res) {
     const result = await execute({
         language: languages[obj.language],
         code: obj.files[0].content,
-        source: "share"
+        source: "share",
+        project
     });
 
     res.json(result);

@@ -42,7 +42,8 @@ export default async function handler (req, res) {
             language: languages[obj.language],
             code: obj.files[0].content, 
             request,
-            source: "request"
+            source: "request",
+            project: obj.identifier
         });
         console.log(result)
     

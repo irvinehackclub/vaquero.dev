@@ -16,6 +16,7 @@
     "@geist-ui/icons": "^1.0.2",
     "@monaco-editor/react": "^4.5.2",
     "@prisma/client": "^5.2.0",
+    "@vercel/kv": "^2.0.0",
     "code-exec": "^1.1.0",
     "codemirror": "^6.0.1",
     "cookies": "^0.8.0",
@@ -29,6 +30,7 @@
     "usehooks-ts": "^2.9.1"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.7",
     "prisma": "^5.2.0"
   }
 }
