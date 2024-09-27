@@ -68,7 +68,7 @@ export function Code({ value, defaultValue, onChange, language = 'javascript', e
   }, [monaco]);
 
   function handleEditorDidMount(editor, monaco) {
-    console.log("editor mounted", editor, monaco);
+    // console.log("editor mounted", editor, monaco);
     editorRef.current = editor;
   }
 

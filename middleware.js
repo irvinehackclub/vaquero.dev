@@ -65,7 +65,7 @@ export default function middleware (request) {
 
             },
             afterAuth(auth, req, evt) {
-                console.log('afterAuth', auth, req, evt)
+                // console.log('afterAuth', auth, req, evt)
                 // handle users who aren't authenticated
 
                 if (!auth.userId && !auth.isPublicRoute) {
