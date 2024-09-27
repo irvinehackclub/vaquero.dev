@@ -32,7 +32,7 @@ export default async function handler (req, res) {
             headers: req.headers,
             method: req.method,
             url: req.url,
-            body: (req.body instanceof ReadableStream) ? null : req.body
+            // body: (req.body instanceof ReadableStream) ? null : req.body
         }
         runtime.stdin = JSON.stringify({
             README: "Please read STDIN documentation at vaquero.dev/docs/stdin",
