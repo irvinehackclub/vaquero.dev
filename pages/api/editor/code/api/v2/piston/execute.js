@@ -1,9 +1,9 @@
 import { issue } from "@/lib/api";
 
 export default async function execute (req, res) {
-    try {
         console.log("INPUT:", req.body);
         const body = JSON.parse(req.body);
+    try {
         body.files = body.files.map(file => {
             try {
                 if (file.name == "__vaquero__runtime.json") {
@@ -28,7 +28,7 @@ export default async function execute (req, res) {
             'Content-Type': 'application/json',
             'User-Agent': 'insomnia/8.4.5'
         },
-        body: req.body
+        body: JSON.stringify(body)
     }).then(r => r.json());
 
     console.log("OUTPUT:", output);
