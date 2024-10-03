@@ -5,7 +5,7 @@ export default async function handler(req, res) {
     const project = validate(req.headers.authorization);
     if (!project) return res.status(401).json({ error: "Unauthorized" });
     
-    const { key } = req.params;
+    const { key } = req.body;
     if (!key) return res.status(400).json({ error: "Missing key" });
 
     const { value } = req.body;
