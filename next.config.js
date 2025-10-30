@@ -11,6 +11,11 @@ const nextConfig = {
       source: "/discord",
       destination: "https://discord.gg/RcJpnuTDj6",
       permanent: true
+    },
+    {
+      source: "/instagram",
+      destination: "https://instagram.com/irvine.compsci",
+      permanent: true
     }
   ],
   headers: async () => {
